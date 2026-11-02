@@ -66,6 +66,21 @@ sudo apt install ant
 Aller dans le root du projet et faire:
 ant -f build-tomcat.xml -Dtomcat.dir=/absolute/path/to/tomcat-9
 
+
+## Faire les env de oracle permanet:
+```bash
+cat >> ~/.bash_profile << 'EOF'
+export ORACLE_HOME=/u01/app/oracle-product/11.2.0/EE
+export ORACLE_SID=EE
+export PATH=$ORACLE_HOME/bin:$PATH
+EOF
+```
+Immediatement:
+```bash
+source ~/.bash_profile
+```
+
+
 ## Si tomcat Activer tomcat
 Run tomcat sur port 8088:
 cd /home/bryan/Softwares/Tomcat/tomcat-9
@@ -90,3 +105,11 @@ http://localhost:8088/async-standard/
 Ensuite on se log avec: 
 Identifiant: admin
 Mot de passe: test
+
+
+Entrer dans un user oracle:
+docker exec -it <container_name> bash
+su - oracle
+sqlplus akoho/Akoho123
+
+(si pas encore fait, il faut export les env, si pas encore fait la commande de bashrc)
