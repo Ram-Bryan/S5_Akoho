@@ -1,0 +1,206 @@
+ want you to categorize my questinos by 5 by 5. Dont answer then. But every question should be there with the details or extras infos from it. Just to have a logic in it. Here are my whole remarks, everyhtin should be inside but just categorized and well separteed
+
+YEs there is bon de commade inside the fournisseur, vente and facturefournisseur package. Look for anything related inside.
+
+What about achat ? adn bon de reception ? 
+
+You said: "You have rang >= 4 (from UserEJBBean)," Where can I see that inside the DB and inside tehe code 
+Que signifie ESTACTIF dans Fournisseur, et si c'est egal a 0, qu;est ce que ca singifie ? 
+Dans DB, whats the differnece between utilsiateur adn utilsisateur personnel ? Which one do we use inside the project ? 
+wahts teh dfiference between as_bondecmmande adn bon de commande table ? 
+Whats the table OFAB ?
+What Proforma ? Whats a souche ? 
+
+Okay i think we should understand the DB first. So here are extrs questios about the DB:
+What I understood is that lot is the poulet we took, but programme zootechnique details is basically the definition of the chicken breed: how many it hatch, etc,... right ?  but why do we have programme zootechinque and programme zootechniqeu details ? 
+Here are the schesm of the two:
+-- AKOHO.PROGRAMMEZOOTECHNIQUEDETAILS definition
+
+CREATE TABLE "AKOHO"."PROGRAMMEZOOTECHNIQUEDETAILS" 
+   (	"ID" VARCHAR2(100), 
+	"IDMERE" VARCHAR2(100), 
+	"AGE" VARCHAR2(200), 
+	"IDSEXE" VARCHAR2(100), 
+	"ALIMENT" NUMBER(30,2), 
+	"POIDS" NUMBER(30,2), 
+	"MORTALITE" NUMBER(30,2), 
+	"PONTEHEBDOMADAIRE" NUMBER(30,2), 
+	"PONTECUMULEE" NUMBER(30,2), 
+	"OEUFCUMULE" NUMBER(30,2), 
+	"OACPOURCENTAGE" NUMBER(30,2), 
+	"OACHH" NUMBER(30,2), 
+	"POIDSOEUF" NUMBER(30,2), 
+	"TAUXECLOSION" NUMBER(30,2), 
+	"POUSSINS" NUMBER(30,2), 
+	"CONSOALIMENTFEMELLE" NUMBER(30,2), 
+	"FEMELLEBW" NUMBER(30,2), 
+	"MALEBW" NUMBER(30,2), 
+	"RATIOPRODUCTION" NUMBER(30,2), 
+	"FERTILITE" NUMBER(30,2), 
+	"CONSOALIMENTMALE" NUMBER(30,2), 
+	"CONSOMMATIONEAU" NUMBER(10,2), 
+	"TEMPERATUREMIN" NUMBER(10,2), 
+	"TEMPERATUREMAX" NUMBER(10,2), 
+	"HUMIDITEMIN" NUMBER(10,2), 
+	"HUMIDITEMAX" NUMBER(10,2), 
+	"DUREEECLAIRAGE" NUMBER(10,2), 
+	"UNIFORMITECIBLE" NUMBER(10,2), 
+	"CVMAX" NUMBER(10,2), 
+	 CONSTRAINT "PROGZOOTECHDETAILS_PK" PRIMARY KEY ("ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE, 
+	 CONSTRAINT "PROGZOOTECHDET_SEXE_FK" FOREIGN KEY ("IDSEXE")
+	  REFERENCES "AKOHO"."SEXE" ("ID") ENABLE, 
+	 CONSTRAINT "PROGZOOTECHDET_MERE_FK" FOREIGN KEY ("IDMERE")
+	  REFERENCES "AKOHO"."PROGRAMMEZOOTECHNIQUE" ("ID") ENABLE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 196608 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+
+-- AKOHO.PROGRAMMEZOOTECHNIQUE definition
+
+CREATE TABLE "AKOHO"."PROGRAMMEZOOTECHNIQUE" 
+   (	"ID" VARCHAR2(100), 
+	"CODE" VARCHAR2(200), 
+	"IDSOUCHE" VARCHAR2(100), 
+	"VERSION" VARCHAR2(200), 
+	"DATY" DATE, 
+	"ETAT" NUMBER(*,0), 
+	 CONSTRAINT "PROGRAMMEZOOTECHNIQUE_PK" PRIMARY KEY ("ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE, 
+	 CONSTRAINT "PROGZOOTECH_SOUCHE_FK" FOREIGN KEY ("IDSOUCHE")
+	  REFERENCES "AKOHO"."SOUCHE" ("ID") ENABLE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 196608 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+
+  I dont quite understand anymore acutally, why do we have age and sexe in it ? 
+
+
+IN lot:
+whats the date arrivee ? 
+
+If we have a ferme, and oeuf hatches, is it a new lot, created in a new compartiment or what ? In that case how are the columns values of the DB filled ? Or whats table touched ?
+
+Magasin2 is the ferme right ? Whats he difrenece between a ferme, a batimet and a comparitmet ? 
+
+Whats the categorie: Ponte and chair of a lot ?
+
+
+lot has idsouche in it, and has idprgramme in it BUt progrmmezootechique too has souche in it Whats that mean ? Can they be differnet or the same always ? thats not maintanbel or am I mistaken ? 
+
+
+Si la race est deja determine dans le programme zootechinque, est ce que on isere en dure la date eclosino dans le lot. Comment differienceir un lot qui vient d'un lot qu on a et un lot qu on a demander a un livreur ? 
+
+Whats AS_ingredient ? I thought that is like the nourriteur or hte medicines we give to the Poulet for exmpale ? -- AKOHO.AS_INGREDIENTS definition
+
+CREATE TABLE "AKOHO"."AS_INGREDIENTS" 
+   (	"ID" VARCHAR2(50) NOT NULL ENABLE, 
+	"LIBELLE" VARCHAR2(250), 
+	"SEUIL" NUMBER(10,2), 
+	"UNITE" VARCHAR2(100), 
+	"QUANTITEPARPACK" NUMBER(10,2), 
+	"PU" NUMBER(30,2), 
+	"ACTIF" NUMBER(2,0) DEFAULT 1, 
+	"PHOTO" VARCHAR2(100), 
+	"CALORIE" NUMBER(5,2), 
+	"DURRE" NUMBER(3,0), 
+	"COMPOSE" NUMBER(8,0) DEFAULT 0, 
+	"CATEGORIEINGREDIENT" VARCHAR2(100), 
+	"IDFOURNISSEUR" VARCHAR2(100), 
+	"DATY" DATE, 
+	"QTELIMITE" NUMBER(30,2), 
+	"PV" NUMBER(30,2) DEFAULT 0, 
+	"LIBELLEVENTE" VARCHAR2(250), 
+	"SEUILMIN" NUMBER(30,2), 
+	"SEUILMAX" NUMBER(30,2), 
+	"PUACHATUSD" NUMBER(30,2), 
+	"PUACHATEURO" NUMBER(30,2), 
+	"PUACHATAUTREDEVISE" NUMBER(30,2), 
+	"PUVENTEUSD" NUMBER(30,2), 
+	"PUVENTEEURO" NUMBER(30,2), 
+	"PUVENTEAUTREDEVISE" NUMBER(30,2), 
+	"ISVENTE" NUMBER(5,0), 
+	"ISACHAT" NUMBER(5,0), 
+	"COMPTE_VENTE" VARCHAR2(100), 
+	"COMPTE_ACHAT" VARCHAR2(100), 
+	"LIBELLEEXTACTE" VARCHAR2(250), 
+	"TVA" NUMBER(10,2) DEFAULT 20, 
+	"FILEPATH" VARCHAR2(500), 
+	"RESTE" NUMBER(20,2), 
+	"TYPESTOCK" VARCHAR2(4), 
+	"REFPOST" VARCHAR2(100), 
+	"REFQUALIFICATION" VARCHAR2(100), 
+	"IDCHAMBRE" VARCHAR2(50), 
+	"ISPERISHABLE" VARCHAR2(50), 
+	"PV2" VARCHAR2(50), 
+	"IDFAMILLE" VARCHAR2(100), 
+	"IDMAGASIN" VARCHAR2(50), 
+	"PARFUMS" VARCHAR2(100), 
+	"ISPETRI" NUMBER(1,0) DEFAULT 0, 
+	"TYPECONSO" VARCHAR2(50), 
+	"COMPTE_TVA" VARCHAR2(100), 
+	"TYPEPRODUIT" VARCHAR2(50), 
+	"COMPTE_STOCK" VARCHAR2(50), 
+	"COMPTE_SORTIE_STOCK" VARCHAR2(50), 
+	"COMPTE_RISTOURNE" VARCHAR2(255), 
+	"UNITE2" VARCHAR2(50), 
+	"MARQUE" VARCHAR2(255), 
+	"ANNEESORTIE" NUMBER(4,0), 
+	"SAV" NUMBER(30,2), 
+	"IDMODELE" VARCHAR2(100), 
+	"COULEUR" VARCHAR2(100), 
+	"TAILLE" VARCHAR2(100), 
+	"IDREFCOM" VARCHAR2(100), 
+	"REFERENCECOMMANDE" VARCHAR2(100), 
+	"CLIENT" VARCHAR2(100), 
+	"STYLE" VARCHAR2(100), 
+	"IDCATEGORIE" VARCHAR2(100), 
+	"CODEBARRE" VARCHAR2(100), 
+	"IDSERVICE" VARCHAR2(100), 
+	"REFERENCE" VARCHAR2(100), 
+	"SOUSCATEGORIE" VARCHAR2(100), 
+	"PVGROS" NUMBER(10,2), 
+	"CODEGROS" NUMBER, 
+	"IDNATURE" VARCHAR2(255), 
+	 PRIMARY KEY ("ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE, 
+	 CONSTRAINT "INGREDIENT_POSTE_FK" FOREIGN KEY ("REFPOST")
+	  REFERENCES "AKOHO"."POSTE" ("ID") ENABLE, 
+	 CONSTRAINT "FK_AS_INGREDIENTS_TYPESTOCK" FOREIGN KEY ("TYPESTOCK")
+	  REFERENCES "AKOHO"."TYPESTOCK" ("ID") ENABLE, 
+	 CONSTRAINT "FK_QUALIFICATION" FOREIGN KEY ("REFQUALIFICATION")
+	  REFERENCES "AKOHO"."QUALIFICATION_PAIE" ("ID") ENABLE, 
+	 CONSTRAINT "FK_TYPEPRODUIT" FOREIGN KEY ("TYPEPRODUIT")
+	  REFERENCES "AKOHO"."TYPE_PRODUIT" ("ID") ENABLE, 
+	 FOREIGN KEY ("CATEGORIEINGREDIENT")
+	  REFERENCES "AKOHO"."CATEGORIEINGREDIENT" ("ID") ENABLE, 
+	 FOREIGN KEY ("UNITE")
+	  REFERENCES "AKOHO"."AS_UNITE" ("ID") ENABLE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 589824 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+
+And who owns it ? the fournisseur (but istn a fournisseur only for chickens or are tehre fourninseur of nourriteur and medicaments too  ?)
+
+Most of the stuff inside  this projet have AS prefix so if you cants find it search iwth the AS prefix
+Explina to me the columns of AS ingredient
+
+Whats the difference between that table and produit ?
+
+Whats vehicule and when do we use it ? 
+Is there a lieu, or something like that to track lieu/toerana ?

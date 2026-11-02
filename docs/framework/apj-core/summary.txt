@@ -1,0 +1,9 @@
+Summary for apj-core.jar
+Decompiled with CFR 0.152
+
+
+chatbot.ChatBot
+----------------------------
+
+sendMessageWithFile(java.lang.String java.io.File java.lang.String )
+  Loose catch block

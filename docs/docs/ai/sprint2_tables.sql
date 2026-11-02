@@ -1,0 +1,158 @@
+-- SPRINT 2: POULET CALENDRIER — SQL SCRIPTS
+-- Project: Akoho
+-- Purpose: Create tables and views for daily chicken count tracking
+-- Date: 2026-10-14
+
+-- ============================================================
+-- 1. TABLE: MORT_POULET
+--    Tracks daily chicken deaths per lot
+--    A dead chicken does NOT decrease the lot count (state change only)
+-- ============================================================
+
+CREATE TABLE "AKOHO"."MORT_POULET" (
+    "ID" VARCHAR2(50) NOT NULL,
+    "IDLOT" VARCHAR2(100) NOT NULL,
+    "DATY" DATE NOT NULL,
+    "NBR_MORT" NUMBER DEFAULT 0,
+    "IDSEXE" VARCHAR2(50),
+    "IDBATIMENT" VARCHAR2(100),
+    "IDPARQUET" VARCHAR2(100),
+    "REMARQUE" VARCHAR2(500),
+    "ETAT" NUMBER DEFAULT 1,
+    CONSTRAINT "MORT_POULET_PK" PRIMARY KEY ("ID"),
+    CONSTRAINT "MORT_POULET_LOT_FK" FOREIGN KEY ("IDLOT") REFERENCES "AKOHO"."LOT" ("ID"),
+    CONSTRAINT "MORT_POULET_SEXE_FK" FOREIGN KEY ("IDSEXE") REFERENCES "AKOHO"."SEXE" ("ID"),
+    CONSTRAINT "MORT_POULET_BATIMENT_FK" FOREIGN KEY ("IDBATIMENT") REFERENCES "AKOHO"."BATIMENT" ("ID"),
+    CONSTRAINT "MORT_POULET_PARQUET_FK" FOREIGN KEY ("IDPARQUET") REFERENCES "AKOHO"."PARQUET" ("ID")
+);
+
+-- Sequence for MORT_POULET
+CREATE SEQUENCE "AKOHO"."GETSEQ_MORT_POULET" START WITH 1 INCREMENT BY 1;
+
+-- ============================================================
+-- 2. TABLE: DISPARITION_POULET
+--    Tracks chicken disappearances (thefts, losses, etc.)
+--    A disappeared chicken DOES decrease the lot count
+-- ============================================================
+
+CREATE TABLE "AKOHO"."DISPARITION_POULET" (
+    "ID" VARCHAR2(50) NOT NULL,
+    "IDLOT" VARCHAR2(100) NOT NULL,
+    "DATY" DATE NOT NULL,
+    "NBR_DISPARU" NUMBER DEFAULT 0,
+    "IDSEXE" VARCHAR2(50),
+    "IDBATIMENT" VARCHAR2(100),
+    "IDPARQUET" VARCHAR2(100),
+    "REMARQUE" VARCHAR2(500),
+    "ETAT" NUMBER DEFAULT 1,
+    CONSTRAINT "DISPARITION_POULET_PK" PRIMARY KEY ("ID"),
+    CONSTRAINT "DISP_POULET_LOT_FK" FOREIGN KEY ("IDLOT") REFERENCES "AKOHO"."LOT" ("ID"),
+    CONSTRAINT "DISP_POULET_SEXE_FK" FOREIGN KEY ("IDSEXE") REFERENCES "AKOHO"."SEXE" ("ID"),
+    CONSTRAINT "DISP_POULET_BAT_FK" FOREIGN KEY ("IDBATIMENT") REFERENCES "AKOHO"."BATIMENT" ("ID"),
+    CONSTRAINT "DISP_POULET_PARQ_FK" FOREIGN KEY ("IDPARQUET") REFERENCES "AKOHO"."PARQUET" ("ID")
+);
+
+-- Sequence for DISPARITION_POULET
+CREATE SEQUENCE "AKOHO"."GETSEQ_DISPARITION_POULET" START WITH 1 INCREMENT BY 1;
+
+-- ============================================================
+-- 3. VIEW: V_POULET_PAR_JOUR
+--    Shows chicken count per day per lot per sex per building
+--    Calculates: total received - deaths - disappearances = current count
+-- ============================================================
+
+CREATE OR REPLACE FORCE VIEW "AKOHO"."V_POULET_PAR_JOUR" AS
+SELECT
+    t.IDLOT AS IDLOT,
+    t.DATY AS DATY,
+    d.IDSEXE AS IDSEXE,
+    b.NOMBATIMENT AS BATIMENT,
+    p.VAL AS PARQUET,
+    SUM(d.QTE) AS QTE_TOTALE
+FROM AKOHO.TRIAGEBATIMENTPARQUET t
+JOIN AKOHO.TRIAGEBATIMENTPARQUETDETAIL d ON t.ID = d.IDMERE
+JOIN AKOHO.BATIMENT b ON d.IDBATIMENT = b.ID
+JOIN AKOHO.PARQUET p ON d.IDPARQUET = p.ID
+WHERE t.ETAT >= 1
+GROUP BY t.IDLOT, t.DATY, d.IDSEXE, b.NOMBATIMENT, p.VAL;
+
+-- ============================================================
+-- 4. VIEW: V_MORT_POULET_PAR_JOUR
+--    Shows daily deaths per lot
+-- ============================================================
+
+CREATE OR REPLACE FORCE VIEW "AKOHO"."V_MORT_POULET_PAR_JOUR" AS
+SELECT
+    mp.IDLOT AS IDLOT,
+    mp.DATY AS DATY,
+    mp.IDSEXE AS IDSEXE,
+    b.NOMBATIMENT AS BATIMENT,
+    p.VAL AS PARQUET,
+    mp.NBR_MORT AS NBR_MORT
+FROM AKOHO.MORT_POULET mp
+LEFT JOIN AKOHO.BATIMENT b ON mp.IDBATIMENT = b.ID
+LEFT JOIN AKOHO.PARQUET p ON mp.IDPARQUET = p.ID
+WHERE mp.ETAT >= 1;
+
+-- ============================================================
+-- 5. VIEW: V_DISPARITION_POULET_PAR_JOUR
+--    Shows daily disappearances per lot
+-- ============================================================
+
+CREATE OR REPLACE FORCE VIEW "AKOHO"."V_DISPARITION_POULET_PAR_JOUR" AS
+SELECT
+    dp.IDLOT AS IDLOT,
+    dp.DATY AS DATY,
+    dp.IDSEXE AS IDSEXE,
+    b.NOMBATIMENT AS BATIMENT,
+    p.VAL AS PARQUET,
+    dp.NBR_DISPARU AS NBR_DISPARU
+FROM AKOHO.DISPARITION_POULET dp
+LEFT JOIN AKOHO.BATIMENT b ON dp.IDBATIMENT = b.ID
+LEFT JOIN AKOHO.PARQUET p ON dp.IDPARQUET = p.ID
+WHERE dp.ETAT >= 1;
+
+-- ============================================================
+-- 6. VIEW: V_POULET_CALENDRIER
+--    Main calendar view: cumulative chicken count per day
+--    Used by PouletCalendrier class
+-- ============================================================
+
+CREATE OR REPLACE FORCE VIEW "AKOHO"."V_POULET_CALENDRIER" AS
+SELECT
+    t.IDLOT AS IDLOT,
+    l.NOMLOT AS NOMLOT,
+    t.DATY AS DATY,
+    d.IDSEXE AS IDSEXE,
+    CASE d.IDSEXE
+        WHEN '1' THEN 'Male'
+        WHEN '0' THEN 'Femelle'
+        ELSE 'Inconnu'
+    END AS SEXE_LIB,
+    b.NOMBATIMENT AS BATIMENT,
+    p.VAL AS PARQUET,
+    SUM(d.QTE) AS QTE_ADULTE,
+    NVL((SELECT SUM(mp.NBR_MORT) FROM AKOHO.MORT_POULET mp 
+         WHERE mp.IDLOT = t.IDLOT AND mp.DATY = t.DATY AND mp.IDSEXE = d.IDSEXE), 0) AS NBR_MORT,
+    NVL((SELECT SUM(dp.NBR_DISPARU) FROM AKOHO.DISPARITION_POULET dp 
+         WHERE dp.IDLOT = t.IDLOT AND dp.DATY = t.DATY AND dp.IDSEXE = d.IDSEXE), 0) AS NBR_DISPARU,
+    SUM(d.QTE) - NVL((SELECT SUM(dp.NBR_DISPARU) FROM AKOHO.DISPARITION_POULET dp 
+         WHERE dp.IDLOT = t.IDLOT AND dp.DATY = t.DATY AND dp.IDSEXE = d.IDSEXE), 0) AS QTE_ACTUELLE
+FROM AKOHO.TRIAGEBATIMENTPARQUET t
+JOIN AKOHO.TRIAGEBATIMENTPARQUETDETAIL d ON t.ID = d.IDMERE
+JOIN AKOHO.BATIMENT b ON d.IDBATIMENT = b.ID
+JOIN AKOHO.PARQUET p ON d.IDPARQUET = p.ID
+JOIN AKOHO.LOT l ON t.IDLOT = l.ID
+WHERE t.ETAT >= 1
+GROUP BY t.IDLOT, l.NOMLOT, t.DATY, d.IDSEXE, b.NOMBATIMENT, p.VAL;
+
+-- ============================================================
+-- 7. INDEXES for performance
+-- ============================================================
+
+CREATE INDEX "IDX_MORT_POULET_LOT" ON "AKOHO"."MORT_POULET" ("IDLOT");
+CREATE INDEX "IDX_MORT_POULET_DATY" ON "AKOHO"."MORT_POULET" ("DATY");
+CREATE INDEX "IDX_DISPARITION_POULET_LOT" ON "AKOHO"."DISPARITION_POULET" ("IDLOT");
+CREATE INDEX "IDX_DISPARITION_POULET_DATY" ON "AKOHO"."DISPARITION_POULET" ("DATY");
+CREATE INDEX "IDX_POULET_CALENDRIER_LOT" ON "AKOHO"."TRIAGEBATIMENTPARQUET" ("IDLOT");
+CREATE INDEX "IDX_POULET_CALENDRIER_DATY" ON "AKOHO"."TRIAGEBATIMENTPARQUET" ("DATY");
