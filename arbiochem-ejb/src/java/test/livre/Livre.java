@@ -33,17 +33,10 @@ public class Livre extends ClassEtat {
     public void setAuteur(String auteur) { this.auteur = auteur; }
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
-    
+    public int getAnneepublication() { return anneepublication; }
+    public void setAnneepublication(int anneepublication) { this.anneepublication = anneepublication; }
     public String getEditeur() { return editeur; }
     public void setEditeur(String editeur) { this.editeur = editeur; }
     public double getPrix() { return prix; }
     public void setPrix(double prix) { this.prix = prix; }
-
-    public int getAnneepublication() {
-        return anneepublication;
-    }
-
-    public void setAnneepublication(int anneepublication) {
-        this.anneepublication = anneepublication;
-    }
 }

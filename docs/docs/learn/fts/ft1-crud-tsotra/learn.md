@@ -2,7 +2,8 @@ un petit CRUD:
 Livre
 
 # Dans le DB:
-- creer une sequence. creer une fonction qui appele cette sequence. Le framework appelle la fonction comme ca: "LIV" + get_seq => LIV0001.
+- creer une sequence. 
+- creer une fonction qui appele cette sequence. Le framework appelle la fonction comme ca: "LIV" + get_seq => LIV0001.
 - creer la table:
 id doit etre un VARCHAR.
 int NUMBER(4,0)
@@ -108,11 +109,11 @@ pi.preparerDataFormu();   // ← loads SELECT id, nom FROM AUTEUR
 7. makeHtmlInsertTabIndex():
 8. Html:
     - cree le formulaire post vers apresTarif:     <% out.println(pi.getFormu().getHtmlInsert()); %>
-    - creer les inputs hidden:
+    - creer les inputs hidden obligatoire:
         - acte (insert/update)
         - bute (apres, c'est a dire apres avoir submit on va dans quelle page)
-        - classe
-        - nomtable
+        - classe (a quelle classe on va insert)
+        - nomtable (dans quelle table on insert)
 
 ## Fiche detail = PageConsulte
 1. Session
