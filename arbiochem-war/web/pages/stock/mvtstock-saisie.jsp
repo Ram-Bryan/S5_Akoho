@@ -123,8 +123,8 @@
         }
 
         if(idBLF!=null && !idBLF.isEmpty()){
-            pi.getFormu().getChamp("idPoint").setAutre("disabled");
-             pi.getFormufle().getChamp("pu_0").setAutre("readonly");
+            //pi.getFormu().getChamp("idPoint").setAutre("disabled");
+            pi.getFormufle().getChamp("pu_0").setAutre("readonly");
         }
 
         if (idOf != null && !idOf.equalsIgnoreCase("")) {
@@ -155,7 +155,7 @@
         pi.getFormufle().getChamp("IdVenteDetail_0").setLibelle("D&eacute;tails vente");
         pi.getFormufle().getChamp("Designation_0").setLibelle("D&eacute;signation");
         if(idBLC!=null && !idBLC.isEmpty()){
-            pi.getFormu().getChamp("idPoint").setAutre("disabled");
+            //pi.getFormu().getChamp("idPoint").setAutre("disabled");
         }
         affichage.Champ.setPageAppelComplete(pi.getFormufle().getChampFille("idProduit"),"produits.IngredientsLib","id","ST_INGREDIENTSAUTO","pu;libelle","pu;designation");
         Champ.setVisible(pi.getFormufle().getChampFille("id"),false);
