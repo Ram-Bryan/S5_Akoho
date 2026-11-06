@@ -62,3 +62,4 @@ __pycache__/
 # Flashed / generated report files (Jasper)
 # ============================================================
 *.jasper
+arbiochem-war/web/dateBuild.txt
