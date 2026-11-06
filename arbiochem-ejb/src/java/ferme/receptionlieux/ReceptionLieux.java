@@ -32,44 +32,114 @@ public class ReceptionLieux extends ClassEtat {
         this.setId(makePK(c));
     }
 
-    @Override public String getTuppleID() { return id; }
-    @Override public String getAttributIDName() { return "id"; }
-    @Override public String[] getMotCles() { return new String[]{"idLot"}; }
-    @Override public String[] getValMotCles() { return new String[]{"idLot"}; }
+    @Override
+    public String getTuppleID() {
+        return id;
+    }
+
+    @Override
+    public String getAttributIDName() {
+        return "id";
+    }
+
+    @Override
+    public String[] getMotCles() {
+        return new String[] { "idLot" };
+    }
+
+    @Override
+    public String[] getValMotCles() {
+        return new String[] { "idLot" };
+    }
 
     // ============ getters/setters ============
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getIdLot() { return idLot; }
-    public void setIdLot(String idLot) { this.idLot = idLot; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public int getOrdre() { return ordre; }
-    public void setOrdre(int ordre) { this.ordre = ordre; }
+    public String getIdLot() {
+        return idLot;
+    }
 
-    public String getIdLieu() { return idLieu; }
-    public void setIdLieu(String idLieu) { this.idLieu = idLieu; }
+    public void setIdLot(String idLot) {
+        this.idLot = idLot;
+    }
 
-    public Date getDaty() { return daty; }
-    public void setDaty(Date daty) { this.daty = daty; }
+    public int getOrdre() {
+        return ordre;
+    }
 
-    public double getQteRecus() { return qteRecus; }
-    public void setQteRecus(double qteRecus) { this.qteRecus = qteRecus; }
+    public void setOrdre(int ordre) {
+        this.ordre = ordre;
+    }
 
-    public double getNbMort() { return nbMort; }
-    public void setNbMort(double nbMort) { this.nbMort = nbMort; }
+    public String getIdLieu() {
+        return idLieu;
+    }
 
-    public double getNbPerdu() { return nbPerdu; }
-    public void setNbPerdu(double nbPerdu) { this.nbPerdu = nbPerdu; }
+    public void setIdLieu(String idLieu) {
+        this.idLieu = idLieu;
+    }
 
-    public String getHeureDepart() { return heureDepart; }
-    public void setHeureDepart(String heureDepart) { this.heureDepart = heureDepart; }
+    public Date getDaty() {
+        return daty;
+    }
 
-    public String getHeureArrive() { return heureArrive; }
-    public void setHeureArrive(String heureArrive) { this.heureArrive = heureArrive; }
+    public void setDaty(Date daty) {
+        this.daty = daty;
+    }
 
-    public String getRemarque() { return remarque; }
-    public void setRemarque(String remarque) { this.remarque = remarque; }
+    public double getQteRecus() {
+        return qteRecus;
+    }
+
+    public void setQteRecus(double qteRecus) {
+        this.qteRecus = qteRecus;
+    }
+
+    public double getNbMort() {
+        return nbMort;
+    }
+
+    public void setNbMort(double nbMort) {
+        this.nbMort = nbMort;
+    }
+
+    public double getNbPerdu() {
+        return nbPerdu;
+    }
+
+    public void setNbPerdu(double nbPerdu) {
+        this.nbPerdu = nbPerdu;
+    }
+
+    public String getHeureDepart() {
+        return heureDepart;
+    }
+
+    public void setHeureDepart(String heureDepart) {
+        this.heureDepart = heureDepart;
+    }
+
+    public String getHeureArrive() {
+        return heureArrive;
+    }
+
+    public void setHeureArrive(String heureArrive) {
+        this.heureArrive = heureArrive;
+    }
+
+    public String getRemarque() {
+        return remarque;
+    }
+
+    public void setRemarque(String remarque) {
+        this.remarque = remarque;
+    }
 
     // ============ computed ============
     public double getVivants() {
@@ -80,10 +150,12 @@ public class ReceptionLieux extends ClassEtat {
     public static int getNextOrdre(String idLot, Connection c) throws Exception {
         int max = 0;
         ReceptionLieux[] all = (ReceptionLieux[]) CGenUtil.rechercher(
-            new ReceptionLieux(), null, null, c,
-            " AND IDLOT = '" + idLot.replace("'", "''") + "'");
+                new ReceptionLieux(), null, null, c,
+                " AND IDLOT = '" + idLot.replace("'", "''") + "'");
         if (all != null) {
-            for (ReceptionLieux r : all) if (r.getOrdre() > max) max = r.getOrdre();
+            for (ReceptionLieux r : all)
+                if (r.getOrdre() > max)
+                    max = r.getOrdre();
         }
         return max + 1;
     }
@@ -93,21 +165,22 @@ public class ReceptionLieux extends ClassEtat {
         if (ordre <= 1) {
             // Previous = latest validated airport reception
             ReceptionPoussinAeroport[] airports = (ReceptionPoussinAeroport[]) CGenUtil.rechercher(
-                new ReceptionPoussinAeroport(), null, null, c,
-                " AND IDLOT = '" + idLot.replace("'", "''") + "'"
-                + " AND ETAT >= 11"
-                + " ORDER BY DATY DESC, ID DESC");
+                    new ReceptionPoussinAeroport(), null, null, c,
+                    " AND IDLOT = '" + idLot.replace("'", "''") + "'"
+                            + " AND ETAT >= 11"
+                            + " ORDER BY DATY DESC, ID DESC");
             if (airports == null || airports.length == 0) {
-                throw new Exception("Aucune réception aéroport validée pour ce lot. Validez d'abord la réception à l'aéroport.");
+                throw new Exception(
+                        "Aucune réception aéroport validée pour ce lot. Validez d'abord la réception à l'aéroport.");
             }
             ReceptionPoussinAeroport a = airports[0];
             return a.getQteRecus() - a.getNbMort() - a.getNbPerdu();
         }
         // Previous = previous step with ordre = ordre - 1
         ReceptionLieux[] prev = (ReceptionLieux[]) CGenUtil.rechercher(
-            new ReceptionLieux(), null, null, c,
-            " AND IDLOT = '" + idLot.replace("'", "''") + "'"
-            + " AND ORDRE = " + (ordre - 1));
+                new ReceptionLieux(), null, null, c,
+                " AND IDLOT = '" + idLot.replace("'", "''") + "'"
+                        + " AND ORDRE = " + (ordre - 1));
         if (prev == null || prev.length == 0) {
             throw new Exception("Étape précédente (ordre " + (ordre - 1) + ") introuvable.");
         }
@@ -117,12 +190,20 @@ public class ReceptionLieux extends ClassEtat {
         return prev[0].getVivants();
     }
 
+    public static double getVivantsDisponibles(String idLot, Connection c) throws Exception {
+        int nextOrdre = getNextOrdre(idLot, c);
+        return getVivantsPrecedents(idLot, nextOrdre, c);
+    }
+
     // ============ framework hooks ============
     @Override
     public ClassMAPTable createObject(String u, Connection c) throws Exception {
         boolean estOuvert = false;
         try {
-            if (c == null) { c = new UtilDB().GetConn(); estOuvert = true; }
+            if (c == null) {
+                c = new UtilDB().GetConn();
+                estOuvert = true;
+            }
 
             // 1. Compute ordre server-side (ignore any client value)
             this.setOrdre(getNextOrdre(this.getIdLot(), c));
@@ -145,7 +226,8 @@ public class ReceptionLieux extends ClassEtat {
             } catch (Exception ex) {
                 String msg = ex.getMessage() == null ? "" : ex.getMessage();
                 if (msg.contains("ORA-00001") || msg.toUpperCase().contains("UNIQUE")) {
-                    throw new Exception("Une étape a été créée entre-temps par un autre utilisateur. Rechargez la page.");
+                    throw new Exception(
+                            "Une étape a été créée entre-temps par un autre utilisateur. Rechargez la page.");
                 }
                 throw ex;
             }
@@ -156,12 +238,13 @@ public class ReceptionLieux extends ClassEtat {
 
     /** Non-blocking warning — shown on the fiche only, never thrown. */
     public String getAvertissement(Connection c) throws Exception {
-        if (this.getOrdre() <= 1) return null;
+        if (this.getOrdre() <= 1)
+            return null;
         try {
             double prevVivants = getVivantsPrecedents(this.getIdLot(), this.getOrdre(), c);
             if (Math.abs(this.getQteRecus() - prevVivants) > 0.01) {
                 return "Vous avez reçu " + this.getQteRecus()
-                    + " alors que l'étape précédente comptait " + prevVivants + " vivants.";
+                        + " alors que l'étape précédente comptait " + prevVivants + " vivants.";
             }
         } catch (Exception e) {
             return null;
@@ -176,13 +259,16 @@ public class ReceptionLieux extends ClassEtat {
         }
         int max = 0;
         ReceptionLieux[] all = (ReceptionLieux[]) CGenUtil.rechercher(
-            new ReceptionLieux(), null, null, c,
-            " AND IDLOT = '" + this.getIdLot().replace("'", "''") + "'");
+                new ReceptionLieux(), null, null, c,
+                " AND IDLOT = '" + this.getIdLot().replace("'", "''") + "'");
         if (all != null) {
-            for (ReceptionLieux r : all) if (r.getOrdre() > max) max = r.getOrdre();
+            for (ReceptionLieux r : all)
+                if (r.getOrdre() > max)
+                    max = r.getOrdre();
         }
         if (this.getOrdre() != max) {
-            throw new Exception("Impossible de supprimer une étape intermédiaire. Seule la dernière étape peut être supprimée.");
+            throw new Exception(
+                    "Impossible de supprimer une étape intermédiaire. Seule la dernière étape peut être supprimée.");
         }
     }
 }

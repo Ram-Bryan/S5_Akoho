@@ -10,6 +10,7 @@ public class TriageBatimentParquetDetail extends ClassFille {
     private String idparquet;
     private String idsexe;
     private String idqualite;
+    private int indicesante;
     private int qte;
 
     public String getId() {
@@ -68,10 +69,13 @@ public class TriageBatimentParquetDetail extends ClassFille {
         this.qte = qte;
     }
 
+    public int getIndicesante() { return indicesante; }
+    public void setIndicesante(int indicesante) { this.indicesante = indicesante; }
+
 
     @Override
     public String getNomClasseMere() {
-        return "ferme.tirageBatiment.TriageBatimentParquet";
+        return "ferme.triageBatiment.TriageBatimentParquet";
     }
 
     @Override
@@ -81,7 +85,7 @@ public class TriageBatimentParquetDetail extends ClassFille {
 
     public TriageBatimentParquetDetail() throws Exception {
         this.setNomTable("TRIAGEBATIMENTPARQUETDETAIL");
-        this.setNomClasseMere("ferme.tirageBatiment.TriageBatimentParquet");
+        this.setNomClasseMere("ferme.triageBatiment.TriageBatimentParquet");
         this.setLiaisonMere("idmere");
     }
 

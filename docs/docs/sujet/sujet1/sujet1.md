@@ -49,14 +49,14 @@ Changement DB:
 - le bouton  triage dans les batiments va directement dans la page
 - page de tracabilite des lieux
 
-Reponses:
-- oui la reception remplace le bon de livraison. Mais je pensais enft cree un tableau separer pour les reception (autre que celui de receptionaerport) pour souci de SOC, et comme ca l'implementation sera plus simple grace au framework 
-- non pas de bouton conditionnel pour l instant
-- on mettra les heures
-- dans la table a faire, je pensais aussi mettre ordre (1, 2, 3) pour savoir la recpetion est a quel etape 
+9. repartiiton dans les compartiemnt:
+form mere:
+    - date et lot
+    - enleve male et femelle disponible
+    - avoir un indicateur de combien sont vivant
 
-
-
+form fille:
+    - qualite devient un indice de 1 a 10 pour savoir la qualite de sante (peut etre ajoute une colonne indice pour ne pas break la strcuture deja existante de la table et des modele. Ensuite on hide la colonne qulaite actuelle et on remplace par cette colonne)   
 
 - Bon de Commandes
 - Bon de livraison

@@ -26,3 +26,8 @@ Connection tmpConn = new UtilDB().GetConn();
 As_BonDeLivraison_Fille line = new As_BonDeLivraison_Fille();
 line = (As_BonDeLivraison_Fille) line.getById(idBlFilleParam, null, tmpConn);
 ```
+
+## Pour les controle dans le frameoworj
+- methode @override createObject(): que se passe t il quand on cree un obet (ajouter des controle,...)
+
+- methode @Override controler(c): les controles. Deja dans le frameowkr, quand on appele createObject(), ca appelle controler()
