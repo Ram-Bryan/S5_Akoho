@@ -47,4 +47,9 @@ Questions:
 
 
 
+
 - est ce que la date du bon de commande c'est la date ou on fait le bon de commande, ou c'est la date prevu pour la reception ? Date limite c'est la date de livraison ? 
+
+
+
+SELECT column_name, data_type, nullable FROM USER_TAB_COLUMNS WHERE table_name = 'LOT' ORDER BY column_id;

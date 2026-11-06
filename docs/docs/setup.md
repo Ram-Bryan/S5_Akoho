@@ -26,11 +26,7 @@ GRANT READ, WRITE ON DIRECTORY dump_dir TO akoho;
 EXIT;
 
 ```
-si startup fait erreur, EXIT sur un terminal normal:
-ps -ef | grep ora_ | grep EE | awk '{print $2}' | xargs -r kill -9
-rm -f $ORACLE_HOME/dbs/lkEE
-rm -f $ORACLE_HOME/dbs/sgadefEE.dbf
-revenir en tant que sysdba et fare SHUTDOWN ABORT puis STARTUP et continuer sur les commandes en haut
+
 
 
 
@@ -111,6 +107,15 @@ Entrer dans un user oracle:
 docker exec -it <container_name> bash
 su - oracle
 sqlplus akoho/Akoho123
+
+si startup fait erreur, EXIT sur un terminal normal:
+ps -ef | grep ora_ | grep EE | awk '{print $2}' | xargs -r kill -9
+rm -f $ORACLE_HOME/dbs/lkEE
+rm -f $ORACLE_HOME/dbs/sgadefEE.dbf
+
+revenir en tant que sysdba et fare SHUTDOWN ABORT puis STARTUP et continuer sur les commandes en haut
+sqlplus / as sysdba
+
 
 
 (si pas encore fait, il faut export les env, si pas encore fait la commande de bashrc)

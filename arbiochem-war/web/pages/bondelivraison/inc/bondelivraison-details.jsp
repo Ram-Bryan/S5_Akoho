@@ -31,6 +31,11 @@
         String[] colSomme = null;
         pr.setNpp(10);
         pr.creerObjetPage(libEntete, colSomme);
+
+        java.util.Map<String, String> actions = new java.util.LinkedHashMap<>();
+        actions.put("Generer un lot-idblfille", pr.getLien() + "?but=ferme/lot/lot-saisie.jsp");
+        pr.getTableau().setLienClicDroite(actions);
+
         int nombreLigne = pr.getTableau().getData().length;
 %>
 

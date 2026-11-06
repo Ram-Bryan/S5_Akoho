@@ -4,6 +4,12 @@
 <%@ page import="ferme.lot.Lot" %>
 <%@page import="affichage.Liste"%>
 <%@page import="bean.TypeObjet"%>
+<%@page import="faturefournisseur.As_BonDeLivraison_Fille"%>
+<%@page import="faturefournisseur.As_BonDeLivraison"%>
+<%@page import="java.sql.Date"%>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="utilitaire.UtilDB" %>
+
 
 <% try{ 
     UserEJB u = (user.UserEJB) session.getValue("u");
@@ -38,14 +44,30 @@
     pi.getFormu().getChamp("idprogramme").setPageAppelComplete("ferme.programme.ProgrammeZootechnique","id","PROGRAMMEZOOTECHNIQUE","id;idSouche","val;idSouche");
 //    pi.getFormu().getChamp("idSouche").setPageAppelComplete("ferme.configuration.Souche","id","SOUCHE","id","val");
 
+
+    System.out.println("AHAHAHAHHA");
+
+    
+    pi.getFormu().getChamp("idBlFille").setLibelle("Ligne de bon de livraison");
+    // pi.getFormu().getChamp("idarticle").setAutre("readonly");
+
     affichage.Liste[] listef = new Liste[1];
     TypeObjet cl=new TypeObjet();
     cl.setNomTable("CATEGORIELOT");
     listef[0]=new Liste("idCategorieLot",cl,"val","id");
+
+    pi.getFormu().getChamp("idBlFille").setPageAppelComplete(
+    "faturefournisseur.As_BonDeLivraison_Fille",  // class name
+    "id",                                          // value column (line PK)
+    "AS_BONDELIVRAISON_LIBCPL",                    // view for choices
+    "produit",                                     // field of the SELECTED line to copy
+    "idarticle"                                    // form field to fill with it
+    );
     pi.getFormu().changerEnChamp(listef);
     pi.getFormu().getChamp("idCategorieLot").setLibelle("Cat&eacute;gorie du Lot");
 
-    String[] ordre = {"nomlot","reference","dateeclosion","datearrivee","source","idferme","idarticle","idorigine","idprogramme"};
+    String[] ordre = {"nomlot","reference","dateeclosion","datearrivee","source",
+                  "idferme","idarticle","idorigine","idprogramme","idBlFille"};
     pi.getFormu().setOrdre(ordre);
  
     String acte = request.getParameter("acte");
@@ -54,6 +76,54 @@
     }
 
     pi.preparerDataFormu();
+
+    // Prefill
+    String idBlFilleParam = request.getParameter("idblfille");
+    System.out.println("got the ibfille");
+    if (idBlFilleParam != null && !idBlFilleParam.trim().isEmpty()) {
+            System.out.println("inside the if");
+
+        Connection tmpConn = new UtilDB().GetConn();
+                    System.out.println("inside the conn");
+
+        try {
+            As_BonDeLivraison_Fille line = new As_BonDeLivraison_Fille();
+line = (As_BonDeLivraison_Fille) line.getById(idBlFilleParam, null, tmpConn);
+
+if (line == null) {
+    // silent skip — the form will render blank; user can pick manually
+} else {
+    As_BonDeLivraison bl = null;
+    if (line.getNumbl() != null) {
+        bl = (As_BonDeLivraison) new As_BonDeLivraison().getById(line.getNumbl(), null, tmpConn);
+    }
+
+    // Now safe to use line / bl
+    // pi.getFormu().getChamp("idBlFille").setDefaut(line.getId());
+    pi.getFormu().getChamp("idBlFille").setValeur(line.getId());
+    // pi.getFormu().getChamp("idarticle").setDefaut(line.getProduit());
+    pi.getFormu().getChamp("idarticle").setValeur(line.getProduit());
+
+
+    String datyStr = (bl != null && bl.getDaty() != null)
+        ? utilitaire.Utilitaire.datetostring(bl.getDaty())
+        : utilitaire.Utilitaire.dateDuJour();
+    // pi.getFormu().getChamp("datearrivee").setDefaut(datyStr);
+    pi.getFormu().getChamp("datearrivee").setValeur(datyStr);
+
+    pi.getFormu().getChamp("idferme").setValeur(bl.getMagasin());
+
+
+    pi.getFormu().getChamp("nomlot").setDefaut(line.getNumbl() + " - " + line.getProduit());
+}
+
+        } finally {
+            tmpConn.close();
+        }
+    }
+
+    System.out.println("done");
+
     pi.getFormu().makeHtmlInsertTabIndex();
 %>
 

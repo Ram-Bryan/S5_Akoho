@@ -5,8 +5,14 @@
 <%@ page import="constante.ConstanteEtat" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="faturefournisseur.As_BonDeLivraison" %>
+<%@ page import="faturefournisseur.As_BonDeLivraison_Fille" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="utilitaire.UtilDB" %>
 
 <% try{ 
+
+    Connection c = new UtilDB().GetConn();
     UserEJB u = (user.UserEJB)session.getValue("u");
     String lien = (String) session.getValue("lien");
 
@@ -84,6 +90,47 @@
                     %>
                     <br/>
                     <div class="box-footer">
+
+                        <%
+  // BL line if any
+  if (o.getIdBlFille() != null && !o.getIdBlFille().isEmpty()) {
+      As_BonDeLivraison_Fille blLine = new As_BonDeLivraison_Fille();
+      blLine = (As_BonDeLivraison_Fille) blLine.getById(o.getIdBlFille(), null, c);
+      if (blLine != null) {
+          As_BonDeLivraison blHeader = new As_BonDeLivraison();
+          blHeader = (As_BonDeLivraison) blHeader.getById(blLine.getNumbl(), null, c);
+%>
+    <div class="alert alert-info" style="margin-top: 15px;">
+        <strong>Traçabilité :</strong>
+        Ce lot provient de la ligne 
+        <a href="<%=lien%>?but=faturefournisseur/bondelivraison-fiche.jsp&id=<%=blLine.getNumbl()%>">
+            <%=blLine.getNumbl()%> — <%=blLine.getProduit()%> (<%=blLine.getQuantite()%>)
+        </a>
+        <% if (blHeader != null && blHeader.getIdbc() != null) { %>
+            &nbsp;→&nbsp; Commande 
+            <a href="<%=lien%>?but=faturefournisseur/bondecommande-fiche.jsp&id=<%=blHeader.getIdbc()%>">
+                <%=blHeader.getIdbc()%>
+            </a>
+        <% } %>
+    </div>
+<%
+      }
+  }
+
+  // Warning if no stock entry
+  String warn = o.getAvertissementStock(c);
+  if (warn != null) {
+%>
+    <div class="alert alert-warning">
+        <strong>Attention :</strong> <%=warn%>
+    </div>
+<%
+  }
+%>
+
+
+
+
                         <a class="btn btn-danger pull-left" href="<%= lien + "?but=apresTarif.jsp&id=" + id+"&acte=delete&bute="+pageApresDelete+"&classe="+classe %>">Supprimer</a>
                         <% if (o.getEtat() < ConstanteEtat.getEtatValider()){%>
                         <a class="btn btn-secondary pull-right" href="<%= lien + "?but="+ pageModif +"&id=" + id %>" style="margin-right: 10px">Modifier</a>
@@ -124,4 +171,6 @@
 <script language="JavaScript"> alert('<%=e.getMessage()%>');
     history.back();
 </script>
-<% }%>
+<% } finally {
+      c.close();
+  } %>
