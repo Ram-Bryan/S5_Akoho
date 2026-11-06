@@ -25,6 +25,30 @@ Ensuite il y a 2 chemins:
 4. page de creation de facture definitive fournisseur 
 5. page d'insertion de mouvement de stock: !!! IL FAUT QUE LE TYPE DE L"INGREDIENT NE SOIT PAS NULL
 
+6. page de detail de bon de livraison ---> creer un lot
+
+7. page de reception aeroport:
+- enleve nb carton male/femelle (setvisible false et default to 0)
+- enlever le tableau mulitple en bas (make the link to ReceptionFille existant but just kill the link for UX purpose)
+- date de reception c'est la date a laquelle on a recus le lot ? Si oui, prefill by BL of lot:
+    - date = date arrive BL
+    - qt recus = qt demande en BL
+    - heure depart et arrive prefill a maintenant
+- ajouter input mort + perdues
+- ajouter table lieux pour les lieux de receptions.
+
+Changement DB:
+- ajout table lieu avec type de lieu
+- ajouter colonne mort et perdues sur la table rececptionaeroport
+
+
+
+
+
+
+
+
+
 
 - Bon de Commandes
 - Bon de livraison
