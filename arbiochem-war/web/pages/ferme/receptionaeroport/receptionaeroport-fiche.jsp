@@ -72,7 +72,17 @@
                             <a class="btn btn-secondary pull-right" href="<%= lien + "?but="+ pageModif +"&id=" + id %>" style="margin-right: 10px">Modifier</a>
                             <a class="btn btn-danger pull-left" href="<%= lien + "?but=apresTarif.jsp&id=" + id+"&acte=delete&bute="+pageApresDelete+"&classe="+classe %>">Supprimer</a>
                         <% } else if(base.getEtat() >= ConstanteEtat.getEtatValider()) { %>
-                            <a class="btn btn-secondary pull-right" href="<%= lien%>?but=ferme/triagebatiment/triagebatimentparquet-saisie.jsp&idLot=<%=base.getIdLot()%>">Trier par b&acirc;timent et par parquet</a>
+                            
+
+                                <a class="btn btn-primary pull-right"
+       href="<%= lien %>?but=ferme/receptionlieux/receptionlieux-saisie.jsp&idLot=<%= base.getIdLot() %>"
+       style="margin-right:10px">Aller au prochain point</a>
+    <a class="btn btn-tertiary pull-right"
+       href="<%= lien %>?but=ferme/triagebatiment/triagebatimentparquet-saisie.jsp&idLot=<%= base.getIdLot() %>"
+       style="margin-right:10px">Triage dans les bâtiments</a>
+
+       
+                            <!-- <a class="btn btn-secondary pull-right" href="<%= lien%>?but=ferme/triagebatiment/triagebatimentparquet-saisie.jsp&idLot=<%=base.getIdLot()%>">Trier par b&acirc;timent et par parquet</a> -->
                         <% } %>
                     </div>
                     <br/>

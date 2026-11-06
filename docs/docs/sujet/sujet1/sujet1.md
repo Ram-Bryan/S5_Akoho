@@ -41,11 +41,19 @@ Changement DB:
 - ajout table lieu avec type de lieu
 - ajouter colonne mort et perdues sur la table rececptionaeroport
 
+8. Reception petit a petit par lieu:
+- apres reception a l'aeorport (dans la fiche de aeropotrt): ajouter bouton "aller au prochain point" et bouton: "triage dans les batiments"
+- page saisie de "aller au prochain point": 
+    - form: date, qt recus, mort, perdues, lieu
+    - bouton: ajouter --> aller vers une sort de fiche pour valider --> cree un bon de livraison/reception (avoir lien bon de livraison mere - fille pour tracabilite) --> "aller au prochain point" et |triage dans les batiments"
+- le bouton  triage dans les batiments va directement dans la page
+- page de tracabilite des lieux
 
-
-
-
-
+Reponses:
+- oui la reception remplace le bon de livraison. Mais je pensais enft cree un tableau separer pour les reception (autre que celui de receptionaerport) pour souci de SOC, et comme ca l'implementation sera plus simple grace au framework 
+- non pas de bouton conditionnel pour l instant
+- on mettra les heures
+- dans la table a faire, je pensais aussi mettre ordre (1, 2, 3) pour savoir la recpetion est a quel etape 
 
 
 

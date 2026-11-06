@@ -65,6 +65,7 @@ try{
     map.put("../programme/inc/programmezoodet", "");
     map.put("../receptionaeroport/inc/receptionaeroport-details", "");
     map.put("../triagebatiment/inc/triagebatimentparquet-det", "");
+    map.put("../receptionlieux/inc/tracabilite-lieux", "");
     String tab = request.getParameter("tab");
     if (tab == null) {
         tab = "../programme/inc/programmezoodet";
@@ -157,6 +158,8 @@ try{
                     <li class="<%=map.get("../programme/inc/programmezoodet")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../programme/inc/programmezoodet">Programme zootechnique</a></li>
                     <li class="<%=map.get("../receptionaeroport/inc/receptionaeroport-details")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../receptionaeroport/inc/receptionaeroport-details">Effectifs</a></li>
                     <li class="<%=map.get("../triagebatiment/inc/triagebatimentparquet-det")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../triagebatiment/inc/triagebatimentparquet-det">R&eacute;partitions</a></li>
+                    <li class="<%=map.get("../receptionlieux/inc/tracabilite-lieux")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../receptionlieux/inc/tracabilite-lieux">Tracabilite des lieux</a></li>
+                    
                 </ul>
                 <div class="tab-content">
                     <jsp:include page="<%= tab %>" >
