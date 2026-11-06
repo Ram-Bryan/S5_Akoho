@@ -10,9 +10,13 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="utilitaire.UtilDB" %>
 
-<% try{ 
+<% 
+Connection c = null;
 
-    Connection c = new UtilDB().GetConn();
+
+try{ 
+
+    c = new UtilDB().GetConn();
     UserEJB u = (user.UserEJB)session.getValue("u");
     String lien = (String) session.getValue("lien");
 
@@ -172,5 +176,5 @@
     history.back();
 </script>
 <% } finally {
-      c.close();
+    if (c != null) c.close();
   } %>
