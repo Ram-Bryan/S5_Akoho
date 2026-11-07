@@ -1,6 +1,8 @@
 package ferme.triageBatiment;
 
 import bean.ClassFille;
+import ferme.utils.ConstanteFerme;
+
 import java.sql.Connection;
 
 public class TriageBatimentParquetDetail extends ClassFille {
@@ -91,7 +93,13 @@ public class TriageBatimentParquetDetail extends ClassFille {
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("TBD","getseq_triagebatparquetdetail");
+        if (ConstanteFerme.IDSEXEFEMELLE.equals(this.getIdsexe())) {
+            this.preparePk("FTBD","getseq_triagebatparquetdetail");
+        } else if (ConstanteFerme.IDSEXEMALE.equals(this.getIdsexe())){
+            this.preparePk("MTBD","getseq_triagebatparquetdetail");
+        } else {
+            this.preparePk("TBD","getseq_triagebatparquetdetail");
+        }
         this.setId(makePK(c));
     }
 
