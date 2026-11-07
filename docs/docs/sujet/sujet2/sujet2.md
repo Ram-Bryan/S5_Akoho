@@ -1,4 +1,4 @@
-Prevision du nombre de poulets dans le calendrier:
+# Prevision du nombre de poulets dans le calendrier:
 
 On cherche a donne un nombre cumule de nombre de poulet dans une ferme tous les jours. Quand on clique sur un jour on a POUR CHAQUE LOT:
     - le nombre de poulet adulte
@@ -25,3 +25,14 @@ Si le nombre de poulet adulte descend ou augmente, automatiquement par prevision
 
 Affichage:
 S'inspire de l'affichage de vente avec CA journalier: calendrier avec valeur total par jour et quand on clique, on va dans une page qui affiche les details.
+
+
+
+
+
+Reponses:
+1. ON a date min et date max (nullable chaqun pour avoir tous jusqu au debut). Ensuite on regarde les poulet exsitatns dans cette tranche de date. ON inclus les evenemnts du genre: des oeufs ont eclos, des poulets ont pondus des oeufs et ces derniers ont eclos (nouveau lot), des poulets sont morts,...Donc c'est tres dynamique.
+
+2. Male et femelle inclus. Dans le details on mettra combien sont femelle et male peut etre
+
+3. 
