@@ -329,5 +329,15 @@ public class ProgrammeZootechniqueDetails extends ClassFille {
     public void setCvMax(double cvMax) {
         this.cvMax = cvMax;
     }
+
+    /** Semaine d'âge (1..N) à partir d'un âge en jours. */
+    public static int semaineOf(int ageJours) {
+        return Math.max(0, ageJours) / 7 + 1;
+    }
+
+    /** Valeur par défaut si la cellule est vide ou 0 → 1.0 (100 %). */
+    public static double pctOrDefault(double v) {
+        return (v <= 0) ? 1.0 : v / 100.0;
+    }
 }
 

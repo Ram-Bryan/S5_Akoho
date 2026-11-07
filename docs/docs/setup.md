@@ -119,3 +119,5 @@ sqlplus / as sysdba
 
 
 (si pas encore fait, il faut export les env, si pas encore fait la commande de bashrc)
+
+

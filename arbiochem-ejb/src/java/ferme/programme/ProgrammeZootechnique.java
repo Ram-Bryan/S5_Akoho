@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
+import bean.CGenUtil;
+
 
 public class ProgrammeZootechnique extends ClassMere {
     private String id;
@@ -45,7 +47,7 @@ public class ProgrammeZootechnique extends ClassMere {
     }
 
     public void setIdsouche(String idsouche) {
-        if(this.getMode().compareToIgnoreCase("modif") == 0) {
+        if (this.getMode().compareToIgnoreCase("modif") == 0) {
             if (idsouche == null || idsouche.isEmpty()) {
                 throw new IllegalArgumentException("Veuillez specifier la souche");
             }
@@ -69,8 +71,6 @@ public class ProgrammeZootechnique extends ClassMere {
         this.daty = daty;
     }
 
-
-
     public ProgrammeZootechnique() throws Exception {
         this.setNomTable("PROGRAMMEZOOTECHNIQUE");
         this.setNomClasseFille("ferme.programme.ProgrammeZootechniqueDetails");
@@ -79,7 +79,7 @@ public class ProgrammeZootechnique extends ClassMere {
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("PZT","getseq_programmezootechnique");
+        this.preparePk("PZT", "getseq_programmezootechnique");
         this.setId(makePK(c));
     }
 
@@ -91,14 +91,17 @@ public class ProgrammeZootechnique extends ClassMere {
 
     public void controlerDoublonAgeSexe() throws Exception {
         ClassFille[] filles = this.getFille();
-        if (filles == null) return;
+        if (filles == null)
+            return;
         Set<String> ageSexeVus = new HashSet<>();
         for (ClassFille f : filles) {
-            if (!(f instanceof ProgrammeZootechniqueDetails)) continue;
+            if (!(f instanceof ProgrammeZootechniqueDetails))
+                continue;
             ProgrammeZootechniqueDetails detail = (ProgrammeZootechniqueDetails) f;
             String age = detail.getAge() == null ? "" : detail.getAge().trim();
             String idsexe = detail.getIdsexe() == null ? "" : detail.getIdsexe().trim();
-            if (age.isEmpty()) continue;
+            if (age.isEmpty())
+                continue;
             if (!ageSexeVus.add(age + "|" + idsexe)) {
                 throw new Exception(ProgrammeZootechniqueDetails.getMessageDoublonAgeSexe(age, idsexe));
             }
@@ -117,14 +120,24 @@ public class ProgrammeZootechnique extends ClassMere {
 
     @Override
     public String[] getMotCles() {
-        String[] motCles={"id","code", "version"};
+        String[] motCles = { "id", "code", "version" };
         return motCles;
     }
 
     @Override
     public String[] getValMotCles() {
-        String[] valMotCles={"id","code", "version"};
+        String[] valMotCles = { "id", "code", "version" };
         return valMotCles;
     }
-}
 
+    /**
+     * Retourne les détails du programme d'une souche, triés par âge et sexe.
+     * Utilisé par la prévision pour construire la courbe.
+     */
+    public ProgrammeZootechniqueDetails[] getDetails(String idProgramme, Connection c) throws Exception {
+        ProgrammeZootechniqueDetails crit = new ProgrammeZootechniqueDetails();
+        return (ProgrammeZootechniqueDetails[]) CGenUtil.rechercher(
+                crit, null, null, c,
+                " AND IDMERE = '" + idProgramme.replace("'", "''") + "' ORDER BY AGE, IDSEXE");
+    }
+}

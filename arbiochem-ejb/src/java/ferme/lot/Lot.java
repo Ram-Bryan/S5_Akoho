@@ -6,9 +6,12 @@ import java.sql.Date;
 import bean.CGenUtil;
 import bean.ClassMAPTable;
 import faturefournisseur.As_BonDeLivraison_Fille;
+import ferme.programme.ProgrammeZootechniqueDetails;
 import stock.MvtStockLib;
 import stock.MvtStockFille;
 import faturefournisseur.As_BonDeLivraison_Fille;
+import ferme.programme.ProgrammeZootechniqueDetails;
+
 
 public class Lot extends ClassEtat {
     private String id;
@@ -232,5 +235,20 @@ public class Lot extends ClassEtat {
         }
 
         return "Aucune entrée en stock trouvée pour ce produit sur ce bon de livraison.";
+    }
+
+    /**
+     * Paramètres de race + courbe hebdomadaire du programme du lot.
+     * Fallback : si le lot n'a pas de programme, retourne null (prévision en réel
+     * seulement).
+     */
+    public ProgrammeZootechniqueDetails[] chargerProgramme(Connection c) throws Exception {
+        if (this.getIdprogramme() == null || this.getIdprogramme().trim().isEmpty()) {
+            return new ProgrammeZootechniqueDetails[0];
+        }
+        ProgrammeZootechniqueDetails crit = new ProgrammeZootechniqueDetails();
+        return (ProgrammeZootechniqueDetails[]) CGenUtil.rechercher(
+                crit, null, null, c,
+                " AND IDMERE = '" + this.getIdprogramme().replace("'", "''") + "' ORDER BY AGE, IDSEXE");
     }
 }
