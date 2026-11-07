@@ -177,6 +177,7 @@ public class MvtStock extends ClassMere {
     }
 
     public void setIdPoint(String idPoint) throws Exception {
+        System.out.println("LE point est: " + idPoint);
         if ((this.getMode().compareToIgnoreCase("modif")==0||this.getMode().compareToIgnoreCase("insert")==0) && (idPoint== null || idPoint.compareToIgnoreCase("") == 0)) {
             throw new Exception("Champ point obligatoire");
         }

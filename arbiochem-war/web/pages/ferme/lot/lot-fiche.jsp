@@ -5,8 +5,18 @@
 <%@ page import="constante.ConstanteEtat" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="faturefournisseur.As_BonDeLivraison" %>
+<%@ page import="faturefournisseur.As_BonDeLivraison_Fille" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="utilitaire.UtilDB" %>
 
-<% try{ 
+<% 
+Connection c = null;
+
+
+try{ 
+
+    c = new UtilDB().GetConn();
     UserEJB u = (user.UserEJB)session.getValue("u");
     String lien = (String) session.getValue("lien");
 
@@ -55,6 +65,7 @@
     map.put("../programme/inc/programmezoodet", "");
     map.put("../receptionaeroport/inc/receptionaeroport-details", "");
     map.put("../triagebatiment/inc/triagebatimentparquet-det", "");
+    map.put("../receptionlieux/inc/tracabilite-lieux", "");
     String tab = request.getParameter("tab");
     if (tab == null) {
         tab = "../programme/inc/programmezoodet";
@@ -84,6 +95,47 @@
                     %>
                     <br/>
                     <div class="box-footer">
+
+                        <%
+  // BL line if any
+  if (o.getIdBlFille() != null && !o.getIdBlFille().isEmpty()) {
+      As_BonDeLivraison_Fille blLine = new As_BonDeLivraison_Fille();
+      blLine = (As_BonDeLivraison_Fille) blLine.getById(o.getIdBlFille(), null, c);
+      if (blLine != null) {
+          As_BonDeLivraison blHeader = new As_BonDeLivraison();
+          blHeader = (As_BonDeLivraison) blHeader.getById(blLine.getNumbl(), null, c);
+%>
+    <div class="alert alert-info" style="margin-top: 15px;">
+        <strong>Traçabilité :</strong>
+        Ce lot provient de la ligne 
+        <a href="<%=lien%>?but=faturefournisseur/bondelivraison-fiche.jsp&id=<%=blLine.getNumbl()%>">
+            <%=blLine.getNumbl()%> — <%=blLine.getProduit()%> (<%=blLine.getQuantite()%>)
+        </a>
+        <% if (blHeader != null && blHeader.getIdbc() != null) { %>
+            &nbsp;→&nbsp; Commande 
+            <a href="<%=lien%>?but=faturefournisseur/bondecommande-fiche.jsp&id=<%=blHeader.getIdbc()%>">
+                <%=blHeader.getIdbc()%>
+            </a>
+        <% } %>
+    </div>
+<%
+      }
+  }
+
+  // Warning if no stock entry
+  String warn = o.getAvertissementStock(c);
+  if (warn != null) {
+%>
+    <div class="alert alert-warning">
+        <strong>Attention :</strong> <%=warn%>
+    </div>
+<%
+  }
+%>
+
+
+
+
                         <a class="btn btn-danger pull-left" href="<%= lien + "?but=apresTarif.jsp&id=" + id+"&acte=delete&bute="+pageApresDelete+"&classe="+classe %>">Supprimer</a>
                         <% if (o.getEtat() < ConstanteEtat.getEtatValider()){%>
                         <a class="btn btn-secondary pull-right" href="<%= lien + "?but="+ pageModif +"&id=" + id %>" style="margin-right: 10px">Modifier</a>
@@ -106,6 +158,8 @@
                     <li class="<%=map.get("../programme/inc/programmezoodet")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../programme/inc/programmezoodet">Programme zootechnique</a></li>
                     <li class="<%=map.get("../receptionaeroport/inc/receptionaeroport-details")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../receptionaeroport/inc/receptionaeroport-details">Effectifs</a></li>
                     <li class="<%=map.get("../triagebatiment/inc/triagebatimentparquet-det")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../triagebatiment/inc/triagebatimentparquet-det">R&eacute;partitions</a></li>
+                    <li class="<%=map.get("../receptionlieux/inc/tracabilite-lieux")%>"><a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=../receptionlieux/inc/tracabilite-lieux">Tracabilite des lieux</a></li>
+                    
                 </ul>
                 <div class="tab-content">
                     <jsp:include page="<%= tab %>" >
@@ -124,4 +178,6 @@
 <script language="JavaScript"> alert('<%=e.getMessage()%>');
     history.back();
 </script>
-<% }%>
+<% } finally {
+    if (c != null) c.close();
+  } %>
