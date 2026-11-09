@@ -26,7 +26,7 @@ GRANT READ, WRITE ON DIRECTORY dump_dir TO akoho;
 EXIT;
 
 ```
-si startup fait erreur, EXIT sur un terminal normal:
+## si startup fait erreur, EXIT sur un terminal normal:
 ps -ef | grep ora_ | grep EE | awk '{print $2}' | xargs -r kill -9
 rm -f $ORACLE_HOME/dbs/lkEE
 rm -f $ORACLE_HOME/dbs/sgadefEE.dbf
@@ -41,7 +41,7 @@ exit
 Sur un terminal normal:
 docker cp /path/to/your/file.dmp oracle:/u01/app/oracle/dumps/
 
-docker cp /home/bryan/ITU/S5/Prog/Reprise_code/Akoho/arbiochemstandard_20261002_160451.dmp oracle:/u01/app/oracle/dumps/
+docker cp /home/itu/Lessons/S5/Prog/Reprise_Code/Akoho/arbiochemstandard_20261002_160451.dmp oracle:/u01/app/oracle/dumps/
 
 Revenir dans docker:
 docker exec -it oracle bash
