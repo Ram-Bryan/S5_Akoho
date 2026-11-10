@@ -14,6 +14,8 @@ build-file/
 arbiochem-war/web/build/
 arbiochem-war/web/dist/
 arbiochem-war/web/WEB-INF/classes/
+arbiochem-war/web/dateBuild.txt
+
 
 # ============================================================
 # IDE / editor files

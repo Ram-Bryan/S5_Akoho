@@ -11,12 +11,12 @@ public class CinemaHistoriqueStatutReservation extends ClassMAPTable {
     private Date datehist;
 
     public CinemaHistoriqueStatutReservation() throws Exception {
-        this.setNomTable("cinema_historique_statut_reservation");
+        this.setNomTable("cinema_hist_statut_reserv");
     }
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("CHSR", "getseq_cinema_hist_statut_reservation");
+        this.preparePk("CHSR", "getseq_cinema_hist_statut_res");
         this.setId(makePK(c));
     }
 

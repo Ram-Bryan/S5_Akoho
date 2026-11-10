@@ -1,5 +1,5 @@
 -- ============================================================================
--- CINEMA — Script DDL complet
+-- CINEMA — Script DDL complet (v2, identifiers <= 30 chars for Oracle 11g)
 -- Oracle EE — préfixe cinema_ pour éviter toute collision avec akoho
 -- Séquences : SEQ_CINEMA_<TABLE> + fonction getseq_cinema_<table>
 -- PK : VARCHAR2(50), format <INDICE_4><SEQ_6>  ex: CCAT000001
@@ -102,10 +102,10 @@ END;
 /
 
 -- ============================================================================
--- 6. cinema_historique_prix_categorie_range
+-- 6. cinema_hist_prix_cat_range  (RENAMED from cinema_historique_prix_categorie_range)
 --    Le "supplément" = prix_supplement ajouté au prix_base du programme
 -- ============================================================================
-CREATE TABLE cinema_historique_prix_categorie_range (
+CREATE TABLE cinema_hist_prix_cat_range (
     id                VARCHAR2(50)  PRIMARY KEY,
     idcategorierange  VARCHAR2(50)  NOT NULL,
     prixsupplement    NUMBER(15,2)  NOT NULL,
@@ -115,13 +115,13 @@ CREATE TABLE cinema_historique_prix_categorie_range (
     CONSTRAINT CK_CHPR_PRIX CHECK (prixsupplement >= 0)
 );
 
-CREATE INDEX CHPR_CATEG_RANGE_IDX ON cinema_historique_prix_categorie_range(idcategorierange, datedebut);
+CREATE INDEX CHPR_CAT_RANGE_IDX ON cinema_hist_prix_cat_range(idcategorierange, datedebut);
 
-CREATE SEQUENCE SEQ_CINEMA_HIST_PRIX_CATEGORIE_RANGE START WITH 1 INCREMENT BY 1 NOCACHE;
-CREATE OR REPLACE FUNCTION getseq_cinema_hist_prix_categorie_range RETURN NUMBER IS
+CREATE SEQUENCE SEQ_CIN_HIST_PRIX_CAT_RANGE START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cin_hist_prix_cat_rng RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
-  SELECT SEQ_CINEMA_HIST_PRIX_CATEGORIE_RANGE.NEXTVAL INTO v_seq FROM DUAL;
+  SELECT SEQ_CIN_HIST_PRIX_CAT_RANGE.NEXTVAL INTO v_seq FROM DUAL;
   RETURN v_seq;
 END;
 /
@@ -228,6 +228,7 @@ END;
 
 -- ============================================================================
 -- 11. cinema_statut_reservation
+--     (table & sequence names OK; function renamed)
 -- ============================================================================
 CREATE TABLE cinema_statut_reservation (
     id          VARCHAR2(50)  PRIMARY KEY,
@@ -235,7 +236,7 @@ CREATE TABLE cinema_statut_reservation (
 );
 
 CREATE SEQUENCE SEQ_CINEMA_STATUT_RESERVATION START WITH 1 INCREMENT BY 1 NOCACHE;
-CREATE OR REPLACE FUNCTION getseq_cinema_statut_reservation RETURN NUMBER IS
+CREATE OR REPLACE FUNCTION getseq_cinema_statut_reserv RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
   SELECT SEQ_CINEMA_STATUT_RESERVATION.NEXTVAL INTO v_seq FROM DUAL;
@@ -277,6 +278,7 @@ END;
 
 -- ============================================================================
 -- 13. cinema_detail_reservation  (ClassFille)
+--     (table & sequence names OK; function renamed)
 -- ============================================================================
 CREATE TABLE cinema_detail_reservation (
     id             VARCHAR2(50)  PRIMARY KEY,
@@ -294,7 +296,7 @@ CREATE INDEX CDTR_RESERVATION_IDX ON cinema_detail_reservation(idreservation);
 CREATE INDEX CDTR_PLACE_IDX       ON cinema_detail_reservation(idplace);
 
 CREATE SEQUENCE SEQ_CINEMA_DETAIL_RESERVATION START WITH 1 INCREMENT BY 1 NOCACHE;
-CREATE OR REPLACE FUNCTION getseq_cinema_detail_reservation RETURN NUMBER IS
+CREATE OR REPLACE FUNCTION getseq_cinema_det_reserv RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
   SELECT SEQ_CINEMA_DETAIL_RESERVATION.NEXTVAL INTO v_seq FROM DUAL;
@@ -303,9 +305,9 @@ END;
 /
 
 -- ============================================================================
--- 14. cinema_historique_statut_reservation
+-- 14. cinema_hist_statut_reserv  (RENAMED from cinema_historique_statut_reservation)
 -- ============================================================================
-CREATE TABLE cinema_historique_statut_reservation (
+CREATE TABLE cinema_hist_statut_reserv (
     id                    VARCHAR2(50) PRIMARY KEY,
     idstatutreservation   VARCHAR2(50) NOT NULL,
     idreservation         VARCHAR2(50) NOT NULL,
@@ -316,13 +318,13 @@ CREATE TABLE cinema_historique_statut_reservation (
         REFERENCES cinema_reservation(id)
 );
 
-CREATE INDEX CHSR_RESERVATION_IDX ON cinema_historique_statut_reservation(idreservation, datehist);
+CREATE INDEX CHSR_RESERV_IDX ON cinema_hist_statut_reserv(idreservation, datehist);
 
-CREATE SEQUENCE SEQ_CINEMA_HIST_STATUT_RESERVATION START WITH 1 INCREMENT BY 1 NOCACHE;
-CREATE OR REPLACE FUNCTION getseq_cinema_hist_statut_reservation RETURN NUMBER IS
+CREATE SEQUENCE SEQ_CINEMA_HIST_STATUT_RES START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cinema_hist_statut_res RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
-  SELECT SEQ_CINEMA_HIST_STATUT_RESERVATION.NEXTVAL INTO v_seq FROM DUAL;
+  SELECT SEQ_CINEMA_HIST_STATUT_RES.NEXTVAL INTO v_seq FROM DUAL;
   RETURN v_seq;
 END;
 /
@@ -345,7 +347,8 @@ CREATE TABLE cinema_facture_client (
     CONSTRAINT CK_CFCT_MONTANT CHECK (montanttotal >= 0)
 );
 
-CREATE INDEX CFCT_RESERVATION_IDX ON cinema_facture_client(idreservation);
+-- NOTE: CFCT_RESERVATION_IDX removed — CFCT_RESERVATION_UK already indexes idreservation
+--       (the old script produced ORA-01408 duplicate-index warning)
 CREATE INDEX CFCT_DATE_IDX        ON cinema_facture_client(datefacture);
 
 CREATE SEQUENCE SEQ_CINEMA_FACTURE_CLIENT START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -358,7 +361,7 @@ END;
 /
 
 -- ============================================================================
--- VUES _LIB
+-- VUES _LIB  (unchanged — none reference renamed tables)
 -- ============================================================================
 
 -- Vue programme avec film + salle

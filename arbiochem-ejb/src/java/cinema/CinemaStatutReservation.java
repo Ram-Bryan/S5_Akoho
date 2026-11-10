@@ -13,7 +13,7 @@ public class CinemaStatutReservation extends ClassMAPTable {
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("CSR", "getseq_cinema_statut_reservation");
+        this.preparePk("CSR", "getseq_cinema_statut_reserv");
         this.setId(makePK(c));
     }
 

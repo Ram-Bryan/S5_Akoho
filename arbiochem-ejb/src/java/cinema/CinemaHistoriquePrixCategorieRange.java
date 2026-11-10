@@ -11,12 +11,12 @@ public class CinemaHistoriquePrixCategorieRange extends ClassMAPTable {
     private Date datedebut;
 
     public CinemaHistoriquePrixCategorieRange() throws Exception {
-        this.setNomTable("cinema_historique_prix_categorie_range");
+        this.setNomTable("cinema_hist_prix_cat_range");
     }
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("CHPR", "getseq_cinema_hist_prix_categorie_range");
+        this.preparePk("CHPR", "getseq_cin_hist_prix_cat_rng");
         this.setId(makePK(c));
     }
 

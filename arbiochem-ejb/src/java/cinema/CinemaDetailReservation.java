@@ -18,7 +18,7 @@ public class CinemaDetailReservation extends ClassFille {
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("CDR", "getseq_cinema_detail_reservation");
+        this.preparePk("CDR", "getseq_cinema_det_reserv");
         this.setId(makePK(c));
     }
 
