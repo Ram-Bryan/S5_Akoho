@@ -61,7 +61,6 @@ apj.connection.user=akoho
 apj.connection.password=Akoho123
 apj.debug=true
 
-
 sudo apt install ant
 Aller dans le root du projet et faire:
 ant -f build-tomcat.xml -Dtomcat.dir=/absolute/path/to/tomcat-9
