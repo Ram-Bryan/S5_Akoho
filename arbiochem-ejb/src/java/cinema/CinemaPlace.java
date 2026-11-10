@@ -30,12 +30,12 @@ public class CinemaPlace extends ClassMAPTable {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"libelle", "id_range"};
+        return new String[]{"libelle", "idrange"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"libelle", "id_range"};
+        return new String[]{"libelle", "idrange"};
     }
 
     public String getId() {

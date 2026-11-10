@@ -13,7 +13,7 @@ public class CinemaDetailReservation extends ClassFille {
     public CinemaDetailReservation() throws Exception {
         this.setNomTable("cinema_detail_reservation");
         this.setNomClasseMere("cinema.CinemaReservation");
-        this.setLiaisonMere("id_reservation");
+        this.setLiaisonMere("idreservation");
     }
 
     @Override
@@ -34,12 +34,12 @@ public class CinemaDetailReservation extends ClassFille {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_reservation", "id_place"};
+        return new String[]{"idreservation", "idplace"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_reservation", "id_place"};
+        return new String[]{"idreservation", "idplace"};
     }
 
     public String getId() {

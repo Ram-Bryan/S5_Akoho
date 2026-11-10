@@ -32,12 +32,12 @@ public class CinemaHistoriqueStatutReservation extends ClassMAPTable {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_statut_reservation", "id_reservation", "date_hist"};
+        return new String[]{"idstatutreservation", "idreservation", "datehist"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_statut_reservation", "id_reservation", "date_hist"};
+        return new String[]{"idstatutreservation", "idreservation", "datehist"};
     }
 
     public String getId() {

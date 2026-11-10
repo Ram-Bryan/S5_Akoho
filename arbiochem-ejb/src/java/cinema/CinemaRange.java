@@ -31,12 +31,12 @@ public class CinemaRange extends ClassMAPTable {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"libelle", "id_salle", "id_categorie_range"};
+        return new String[]{"libelle", "idsalle", "idcategorierange"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"libelle", "id_salle", "id_categorie_range"};
+        return new String[]{"libelle", "idsalle", "idcategorierange"};
     }
 
     public String getId() {

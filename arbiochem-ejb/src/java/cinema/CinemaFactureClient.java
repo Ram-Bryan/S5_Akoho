@@ -2,12 +2,13 @@ package cinema;
 
 import bean.ClassEtat;
 import java.sql.Connection;
+import java.sql.Date;
 
 public class CinemaFactureClient extends ClassEtat {
     private String id;
     private String numero;
     private String idreservation;
-    private java.sql.Date datefacture;
+    private Date datefacture;
     private double montanttotal;
     private int etat;
     private String iduser;
@@ -34,12 +35,12 @@ public class CinemaFactureClient extends ClassEtat {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"numero", "id_reservation"};
+        return new String[]{"numero", "idreservation"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"numero", "id_reservation"};
+        return new String[]{"numero", "idreservation"};
     }
 
     public String getId() {
@@ -66,11 +67,11 @@ public class CinemaFactureClient extends ClassEtat {
         this.idreservation = idreservation;
     }
 
-    public java.sql.Date getDatefacture() {
+    public Date getDatefacture() {
         return datefacture;
     }
 
-    public void setDatefacture(java.sql.Date datefacture) {
+    public void setDatefacture(Date datefacture) {
         this.datefacture = datefacture;
     }
 

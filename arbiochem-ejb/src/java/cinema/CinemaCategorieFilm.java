@@ -30,12 +30,12 @@ public class CinemaCategorieFilm extends ClassMAPTable {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_categorie", "id_film"};
+        return new String[]{"idcategorie", "idfilm"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_categorie", "id_film"};
+        return new String[]{"idcategorie", "idfilm"};
     }
 
     public String getId() {

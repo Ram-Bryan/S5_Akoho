@@ -32,12 +32,12 @@ public class CinemaHistoriquePrixCategorieRange extends ClassMAPTable {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_categorie_range", "date_debut"};
+        return new String[]{"idcategorierange", "datedebut"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_categorie_range", "date_debut"};
+        return new String[]{"idcategorierange", "datedebut"};
     }
 
     public String getId() {

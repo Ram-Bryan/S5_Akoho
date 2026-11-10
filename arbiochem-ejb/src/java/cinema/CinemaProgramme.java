@@ -2,14 +2,15 @@ package cinema;
 
 import bean.ClassEtat;
 import java.sql.Connection;
+import java.sql.Date;
 
 public class CinemaProgramme extends ClassEtat {
     private String id;
     private String idfilm;
     private String idsalle;
-    private java.sql.Date datedebut;
+    private Date datedebut;
     private String heuredebut;
-    private java.sql.Date datefin;
+    private Date datefin;
     private String heurefin;
     private double prixbase;
     private int etat;
@@ -37,12 +38,12 @@ public class CinemaProgramme extends ClassEtat {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_film", "id_salle", "date_debut", "heure_debut"};
+        return new String[]{"idfilm", "idsalle", "datedebut", "heuredebut"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_film", "id_salle", "date_debut", "heure_debut"};
+        return new String[]{"idfilm", "idsalle", "datedebut", "heuredebut"};
     }
 
     public String getId() {
@@ -69,11 +70,11 @@ public class CinemaProgramme extends ClassEtat {
         this.idsalle = idsalle;
     }
 
-    public java.sql.Date getDatedebut() {
+    public Date getDatedebut() {
         return datedebut;
     }
 
-    public void setDatedebut(java.sql.Date datedebut) {
+    public void setDatedebut(Date datedebut) {
         this.datedebut = datedebut;
     }
 
@@ -85,11 +86,11 @@ public class CinemaProgramme extends ClassEtat {
         this.heuredebut = heuredebut;
     }
 
-    public java.sql.Date getDatefin() {
+    public Date getDatefin() {
         return datefin;
     }
 
-    public void setDatefin(java.sql.Date datefin) {
+    public void setDatefin(Date datefin) {
         this.datefin = datefin;
     }
 

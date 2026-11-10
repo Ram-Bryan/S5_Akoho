@@ -2,12 +2,14 @@ package cinema;
 
 import bean.ClassMere;
 import java.sql.Connection;
+import java.sql.Date;
+
 
 public class CinemaReservation extends ClassMere {
     private String id;
     private String idclient;
     private String idprogramme;
-    private java.sql.Date datereservation;
+    private Date datereservation;
     private String idstatutreservation;
     private int etat;
     private String iduser;
@@ -15,7 +17,7 @@ public class CinemaReservation extends ClassMere {
     public CinemaReservation() throws Exception {
         this.setNomTable("cinema_reservation");
         this.setNomClasseFille("cinema.CinemaDetailReservation");
-        this.setLiaisonFille("id_reservation");
+        this.setLiaisonFille("idreservation");
     }
 
     @Override
@@ -36,12 +38,12 @@ public class CinemaReservation extends ClassMere {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"id_client", "id_programme", "date_reservation"};
+        return new String[]{"idclient", "idprogramme", "datereservation"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"id_client", "id_programme", "date_reservation"};
+        return new String[]{"idclient", "idprogramme", "datereservation"};
     }
 
     public String getId() {
@@ -68,11 +70,11 @@ public class CinemaReservation extends ClassMere {
         this.idprogramme = idprogramme;
     }
 
-    public java.sql.Date getDatereservation() {
+    public Date getDatereservation() {
         return datereservation;
     }
 
-    public void setDatereservation(java.sql.Date datereservation) {
+    public void setDatereservation(Date datereservation) {
         this.datereservation = datereservation;
     }
 
