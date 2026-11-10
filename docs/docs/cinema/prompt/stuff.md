@@ -1,146 +1,23 @@
-Voila la conception finale:
-# CINEMA — Conception de la base de données
+Okay mtn on va remplir la base, donc faire les inserts necessaries. Voici les donnes que je veux:
 
-## 1. Gestion des films
+cinema categorie: 4 categorie. Ajoute une categorie "normal"
+film: 10 films avec different prix de programme qui range dans 10 000 a 30 000.
+cinema categorie: certains 1 seul categorie, d'autre plusieurs
+4 salles avec des range differents et des places. Dans une salles on aura: 20 a 50 places.
+3 categories de range avec prix actuel:
+- Standard: +0
+- Premium: +2000
+- VIP: +5000
+Environ 10 programmes
+3 clients: Jean, Jeannette, Billy Jean
 
-### cinema_categorie
-- id
-- libelle
+statut reservation: libelle (reserve, paye, annule, expire)
 
-### cinema_film
-- id
-- titre
-- description
-- duree
+Pas encore de reservation, ni de facture.
 
-### cinema_categorie_film
-- id
-- id_categorie
-- id_film
+Pour chaque historique de prix, on aura que 2 historiques. (2 dates), tu choisira les autres prix, mais je t'ai dis les prix actuelle.
 
----
+Questions: est ce que je cree une constante classe pour avoir les categorie de range ou on fait toujours des requetes pour ca ? Aussi comment on fait des requetes et fetch dans ce framework ?
+OU quels tables sont utiles pour faire COnstnate ou eon en a pas besoin ?
 
-## 2. Gestion des salles et des sièges
-
-### cinema_salle
-- id
-- libelle
-
-### cinema_categorie_range
-- id
-- libelle
-
-### cinema_historique_prix_categorie_range
-- id
-- id_categorie_range
-- prix_supplement
-- date_debut
-
-### cinema_range
-- id
-- libelle
-- id_salle
-- id_categorie_range
-
-### cinema_place
-- id
-- libelle
-- id_range
-
----
-
-## 3. Gestion des programmes (séances)
-
-### cinema_programme
-- id
-- id_film
-- id_salle
-- date_debut
-- date_fin
-- prix_base
-
----
-
-## 4. Gestion des clients et des réservations
-
-### cinema_client
-- id
-- nom
-
-### cinema_reservation
-- id
-- id_client
-- id_programme
-- date_reservation
-
-### cinema_detail_reservation
-- id
-- id_reservation
-- id_place
-
-### cinema_statut_reservation
-- id
-- libelle (reserve, paye, annule, expire)
-
-### cinema_historique_statut_reservation
-- id
-- id_statut_reservation
-- id_reservation
-- date
-
----
-
-## 5. Gestion des factures
-
-### cinema_facture_client
-- id
-- numero
-- id_reservation
-- date_facture
-
----
-
-## 6. Règles de gestion
-
-- Un film peut appartenir à plusieurs catégories et une catégorie peut être associée à plusieurs films.
-- Un cinéma possède plusieurs salles.
-- Chaque salle possède sa propre disposition de ranges. Les dispositions peuvent être différentes d'une salle à une autre.
-- Chaque range appartient à une seule salle et à une catégorie de range.
-- Chaque catégorie de range possède un historique de suppléments fixes.
-- Chaque place appartient à une seule range.
-- Un programme représente une séance d'un film dans une salle, à une date et une heure données.
-- Chaque programme possède un prix de base fixé par le cinéma.
-- Une réservation appartient à un client et concerne un seul programme.
-- Une réservation peut contenir plusieurs places, y compris des places appartenant à différentes ranges.
-- Une place ne peut pas être attribuée à plusieurs réservations actives pour un même programme.
-- Le client représente l'acheteur. Il n'est pas nécessaire d'enregistrer individuellement chaque spectateur.
-- Le prix d'un billet est calculé dynamiquement selon la formule :
-  **Prix du billet = Prix de base du programme + Supplément de la catégorie de range.**
-- Le supplément applicable est déterminé à partir de l'historique des prix de la catégorie de range et de la date de référence de la vente.
-- Les changements de statut des réservations sont conservés dans l'historique des statuts.
-- Une facture est associée à une réservation.
-- Le mode de paiement est enregistré directement dans la facture.
-- Le montant total de la facture est calculé dynamiquement à partir des billets de la réservation.
-- Les historiques de prix ne doivent pas être supprimés ou modifiés rétroactivement lorsqu'ils ont déjà été utilisés pour des ventes.
-- Une réservation annulée ou expirée ne doit plus bloquer les places concernées.   
-Voicic les fontionnalites attendues:
-CRUD complet de chaque entite: 
-    - categorie
-    - film (avec ajout de categorie film)
-    - salle: avec range et chaise
-    - programme
-    - client
-    - reservation
-    - facture client
-
-Fonctionnalite attendu:
-- page de reservation: 
-    - on entre le client, le programme voulu
-    - on rentre les places attendues: pour les chaises on peut choisir un par un, ou on peut directement choisir combien de chaise et dans quel rane. (fonctionnalite de gestion de chaise)
-    - on calcule dynamiquement le prix selon le prix de la seance + le prix supplement
-    - on sauvegarde et valider et vise --> transaction:
-        - creation de reservation
-        - creation de facture client
-
-
-on va maintenant coder. Donne moi d'abord les DDL necessarires complet. Pas encore de insert. En prenant en compte de qui seront les Classe Etat, MapTable, Mere Fille, selon notre framewokr
+Je te redonne le script actuelle:
