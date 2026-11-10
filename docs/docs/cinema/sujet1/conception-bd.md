@@ -41,7 +41,7 @@
 - id_salle
 - id_categorie_range
 
-### cinema_chaise
+### cinema_place
 - id
 - libelle
 - id_range
@@ -75,7 +75,7 @@
 ### cinema_detail_reservation
 - id
 - id_reservation
-- id_chaise
+- id_place
 
 ### cinema_statut_reservation
 - id
@@ -96,7 +96,6 @@
 - numero
 - id_reservation
 - date_facture
-- mode_paiement
 
 ---
 
@@ -107,12 +106,12 @@
 - Chaque salle possède sa propre disposition de ranges. Les dispositions peuvent être différentes d'une salle à une autre.
 - Chaque range appartient à une seule salle et à une catégorie de range.
 - Chaque catégorie de range possède un historique de suppléments fixes.
-- Chaque chaise appartient à une seule range.
+- Chaque place appartient à une seule range.
 - Un programme représente une séance d'un film dans une salle, à une date et une heure données.
 - Chaque programme possède un prix de base fixé par le cinéma.
 - Une réservation appartient à un client et concerne un seul programme.
-- Une réservation peut contenir plusieurs chaises, y compris des chaises appartenant à différentes ranges.
-- Une chaise ne peut pas être attribuée à plusieurs réservations actives pour un même programme.
+- Une réservation peut contenir plusieurs places, y compris des places appartenant à différentes ranges.
+- Une place ne peut pas être attribuée à plusieurs réservations actives pour un même programme.
 - Le client représente l'acheteur. Il n'est pas nécessaire d'enregistrer individuellement chaque spectateur.
 - Le prix d'un billet est calculé dynamiquement selon la formule :
   **Prix du billet = Prix de base du programme + Supplément de la catégorie de range.**
@@ -122,4 +121,4 @@
 - Le mode de paiement est enregistré directement dans la facture.
 - Le montant total de la facture est calculé dynamiquement à partir des billets de la réservation.
 - Les historiques de prix ne doivent pas être supprimés ou modifiés rétroactivement lorsqu'ils ont déjà été utilisés pour des ventes.
-- Une réservation annulée ou expirée ne doit plus bloquer les chaises concernées.   
+- Une réservation annulée ou expirée ne doit plus bloquer les places concernées.   

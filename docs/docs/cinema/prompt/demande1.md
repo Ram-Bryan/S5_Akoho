@@ -58,3 +58,10 @@ Voici les reponses a tes questions et les ameliorations cote conception en sacha
 8. On joue toujours avec admin. PAs encore de gesion de roles complexe. Donc pas d'implementation de roles dans ce code a implemente.
 
 Si tu est okay, alors je te passe le framework mtn ?
+
+
+
+
+Prepare direct ces inserts:
+-  categorillet de range: Standard, VIP. 
+- 3 salle avec different disposition de range et categories et de chaises (une salle aura entre 20 a 50 places)
