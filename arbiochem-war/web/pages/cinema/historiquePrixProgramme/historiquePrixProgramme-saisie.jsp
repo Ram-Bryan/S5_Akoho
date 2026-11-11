@@ -20,6 +20,10 @@
     Liste listeProg = new Liste("idprogramme", new CinemaProgramme(), "id", "id");
     pi.getFormu().changerEnChamp(new Liste[]{ listeProg });
 
+    if (request.getParameter("idprogramme") != null) {
+    pi.getFormu().getChamp("idprogramme").setDefaut(request.getParameter("idprogramme"));
+}
+
     pi.getFormu().getChamp("idprogramme").setLibelle("Programme");
     pi.getFormu().getChamp("prix").setLibelle("Prix (Ar)");
     pi.getFormu().getChamp("datedebut").setLibelle("Date d'effet");

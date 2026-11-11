@@ -8,14 +8,13 @@
     CinemaProgramme o = new CinemaProgramme();
     String[] listeCrt  = {"id", "idsalle", "datedebut"};
     String[] listeInt  = {"datedebut"};
-    String[] libEntete = {"id", "idsalle", "datedebut", "heuredebut", "etat"};
+    String[] libEntete = {"id", "idsalle", "datedebut", "heuredebut", "prix", "etat"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des programmes");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
     pr.setLien((String) session.getValue("lien"));
     pr.setApres("cinema/programme/programme-liste.jsp");
 
-    // Salle en dropdown (affiche le libellé de la salle)
     Liste listeSalle = new Liste("idsalle", new CinemaSalle(), "libelle", "id");
     pr.getFormu().changerEnChamp(new Liste[]{ listeSalle });
 
@@ -35,7 +34,7 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/programme/programme-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Salle", "Date début", "Heure début", "&Eacute;tat"});
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Salle", "Date début", "Heure début", "Prix (Ar)", "&Eacute;tat"});
 %>
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>

@@ -1,17 +1,19 @@
 package cinema;
 
-import bean.ClassMere;
-import java.sql.Connection;
-import java.sql.Date;
-
 import bean.CGenUtil;
 import bean.ClassFille;
+import bean.ClassMAPTable;
+import bean.ClassMere;
+import utilitaire.Utilitaire;
+import java.sql.Connection;
+import java.sql.Date;
 
 public class CinemaProgramme extends ClassMere {
     private String id;
     private String idsalle;
     private Date datedebut;
     private String heuredebut;
+    private double prix;
     private int etat;
     private String iduser;
 
@@ -79,6 +81,14 @@ public class CinemaProgramme extends ClassMere {
         this.heuredebut = heuredebut;
     }
 
+    public double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
     @Override
     public int getEtat() {
         return etat;
@@ -98,21 +108,55 @@ public class CinemaProgramme extends ClassMere {
     }
 
     // ============================================================================
-    // Raccourcis : prix du programme à une date / aujourd'hui
+    // createObject : insère le programme + ligne de prix initiale dans l'historique
     // ============================================================================
-    public double getPrixEnVigueur(Date dateRef, Connection c) throws Exception {
-        return CinemaHistoriquePrixProgramme.getPrixEnVigueur(this.getId(), dateRef, c);
+    @Override
+    public ClassMAPTable createObject(String refUser, Connection c) throws Exception {
+        ClassMAPTable result = super.createObject(refUser, c);
+
+        if (this.getPrix() > 0) {
+            CinemaHistoriquePrixProgramme hist = new CinemaHistoriquePrixProgramme();
+            hist.setIdprogramme(this.getId());
+            hist.setPrix(this.getPrix());
+            hist.setDatedebut(Utilitaire.dateDuJourSql());
+            hist.construirePK(c);
+            hist.insertToTableWithHisto(refUser, c);
+        }
+
+        return result;
     }
 
-    public double getPrixActuel(Connection c) throws Exception {
-        return CinemaHistoriquePrixProgramme.getPrixActuel(this.getId(), c);
+    // ============================================================================
+    // updateObject : si le prix change, ajoute une ligne d'historique
+    // ============================================================================
+    @Override
+    public int updateObject(String refUser, Connection c) throws Exception {
+        // Charger l'état actuel en base avant update
+        CinemaProgramme avant = new CinemaProgramme();
+        avant.setId(this.getId());
+        CinemaProgramme[] before = (CinemaProgramme[]) CGenUtil.rechercher(avant, null, null, c, "");
+        double prixAvant = (before != null && before.length > 0) ? before[0].getPrix() : 0.0;
+
+        // Update normal
+        int result = super.updateObject(refUser, c);
+
+        // Si le prix a changé, tracer dans l'historique
+        if (Math.abs(this.getPrix() - prixAvant) > 0.001) {
+            CinemaHistoriquePrixProgramme hist = new CinemaHistoriquePrixProgramme();
+            hist.setIdprogramme(this.getId());
+            hist.setPrix(this.getPrix());
+            hist.setDatedebut(Utilitaire.dateDuJourSql());
+            hist.construirePK(c);
+            hist.insertToTableWithHisto(refUser, c);
+        }
+
+        return result;
     }
 
     // ============================================================================
     // Durée totale du programme (somme des durées des films)
     // ============================================================================
     public int getDureeTotal(Connection c) throws Exception {
-        // 1. En mémoire (création en cours via PageInsertMultiple)
         ClassFille[] filles = this.getFille();
         if (filles != null && filles.length > 0) {
             int total = 0;
@@ -129,7 +173,6 @@ public class CinemaProgramme extends ClassMere {
             return total;
         }
 
-        // 2. Depuis la base (fiche, contrôle de chevauchement)
         if (this.getId() == null)
             return 0;
         java.sql.Statement st = null;
@@ -176,7 +219,6 @@ public class CinemaProgramme extends ClassMere {
         return String.format("%02d:%02d", totalMin / 60, totalMin % 60);
     }
 
-    /** Helper : (Date, "HH:mm") → millis */
     public static long toMillis(Date date, String heure) throws Exception {
         if (date == null || heure == null)
             throw new Exception("date et heure requis pour calculer les bornes");
@@ -202,7 +244,7 @@ public class CinemaProgramme extends ClassMere {
 
         int duree = getDureeTotal(c);
         if (duree <= 0)
-            return; // Pas de films → pas de bornes → pas de contrôle possible
+            return;
 
         long debutMilli = toMillis(this.getDatedebut(), this.getHeuredebut());
         long finMilli = debutMilli + (long) duree * 60_000L;

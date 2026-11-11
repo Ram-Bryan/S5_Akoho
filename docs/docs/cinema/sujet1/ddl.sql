@@ -1,15 +1,9 @@
 -- ============================================================================
--- CINEMA — DDL COMPLET (v3)
+-- CINEMA — DDL COMPLET (v4)
 -- Oracle EE — préfixe cinema_ pour éviter les collisions
--- Séquences : SEQ_CINEMA_<TABLE> + fonction getseq_cinema_<table>
--- PK : VARCHAR2(50), format <INDICE_4><SEQ_6>  ex: CCAT000001
 -- Colonnes : AUCUN underscore
--- Changements vs v2 :
---   - cinema_programme : + idsalle / datedebut / heuredebut (sans idfilm, datefin, heurefin, prixbase)
---   - cinema_detail_programme : NOUVELLE (fille)
---   - cinema_historique_prix_programme : NOUVELLE (historique prix)
---   - cinema_reservation : idprogramme → iddetailprogramme
---   - Vue cinema_programme_lib : SUPPRIMÉE
+-- Changements vs v3 :
+--   - cinema_programme : + prix NUMBER(15,2) DEFAULT 0 NOT NULL (cache dénormalisé)
 -- ============================================================================
 
 -- ============================================================================
@@ -108,7 +102,7 @@ END;
 /
 
 -- ============================================================================
--- 6. cinema_hist_prix_cat_range  (supplément historisé par catégorie de range)
+-- 6. cinema_hist_prix_cat_range
 -- ============================================================================
 CREATE TABLE cinema_hist_prix_cat_range (
     id                VARCHAR2(50)  PRIMARY KEY,
@@ -139,8 +133,8 @@ CREATE TABLE cinema_range (
     libelle           VARCHAR2(255) NOT NULL,
     idsalle           VARCHAR2(50)  NOT NULL,
     idcategorierange  VARCHAR2(50)  NOT NULL,
-    etat   NUMBER(2)   DEFAULT 1 NOT NULL,
-    iduser VARCHAR2(50) DEFAULT '0',
+    etat              NUMBER(2)     DEFAULT 1 NOT NULL,
+    iduser            VARCHAR2(50)  DEFAULT '0',
     CONSTRAINT CRNG_SALLE_FK       FOREIGN KEY (idsalle)
         REFERENCES cinema_salle(id),
     CONSTRAINT CRNG_CATEG_RANGE_FK FOREIGN KEY (idcategorierange)
@@ -165,8 +159,8 @@ CREATE TABLE cinema_place (
     id          VARCHAR2(50)  PRIMARY KEY,
     libelle     VARCHAR2(50)  NOT NULL,
     idrange     VARCHAR2(50)  NOT NULL,
-    etat   NUMBER(2)   DEFAULT 1 NOT NULL,
-    iduser VARCHAR2(50) DEFAULT '0',
+    etat        NUMBER(2)     DEFAULT 1 NOT NULL,
+    iduser      VARCHAR2(50)  DEFAULT '0',
     CONSTRAINT CPLACE_RANGE_FK FOREIGN KEY (idrange)
         REFERENCES cinema_range(id),
     CONSTRAINT CPLACE_RANGE_UK UNIQUE (idrange, libelle)
@@ -184,19 +178,19 @@ END;
 /
 
 -- ============================================================================
--- 9. cinema_programme  (mère : salle + date/heure début)
---    PAS de idfilm, datefin, heurefin, prixbase
---    La date fin est calculée dynamiquement (somme des durées des filles) → Java
+-- 9. cinema_programme  (mère : salle + date/heure début + prix courant)
 -- ============================================================================
 CREATE TABLE cinema_programme (
     id           VARCHAR2(50)  PRIMARY KEY,
     idsalle      VARCHAR2(50)  NOT NULL,
     datedebut    DATE          NOT NULL,
     heuredebut   VARCHAR2(5)   NOT NULL,
+    prix         NUMBER(15,2)  DEFAULT 0 NOT NULL,
     etat         NUMBER(2)     DEFAULT 1 NOT NULL,
     iduser       VARCHAR2(50)  DEFAULT '0',
     CONSTRAINT CPRG_SALLE_FK FOREIGN KEY (idsalle) REFERENCES cinema_salle(id),
-    CONSTRAINT CK_CPRG_HEURE CHECK (REGEXP_LIKE(heuredebut, '^([01][0-9]|2[0-3]):[0-5][0-9]$'))
+    CONSTRAINT CK_CPRG_HEURE CHECK (REGEXP_LIKE(heuredebut, '^([01][0-9]|2[0-3]):[0-5][0-9]$')),
+    CONSTRAINT CK_CPRG_PRIX  CHECK (prix >= 0)
 );
 
 CREATE INDEX CPRG_SALLE_IDX ON cinema_programme(idsalle, datedebut, heuredebut);
@@ -211,7 +205,7 @@ END;
 /
 
 -- ============================================================================
--- 10. cinema_detail_programme  (fille : les films du programme)
+-- 10. cinema_detail_programme
 -- ============================================================================
 CREATE TABLE cinema_detail_programme (
     id           VARCHAR2(50)  PRIMARY KEY,
@@ -240,7 +234,7 @@ END;
 /
 
 -- ============================================================================
--- 11. cinema_historique_prix_programme  (prix historisé du programme)
+-- 11. cinema_historique_prix_programme
 -- ============================================================================
 CREATE TABLE cinema_historique_prix_programme (
     id           VARCHAR2(50)  PRIMARY KEY,
@@ -298,8 +292,7 @@ END;
 /
 
 -- ============================================================================
--- 14. cinema_reservation  (ClassMere, liée à cinema_detail_programme)
---     Réservation = par FILM (pas par programme entier)
+-- 14. cinema_reservation
 -- ============================================================================
 CREATE TABLE cinema_reservation (
     id                    VARCHAR2(50)  PRIMARY KEY,
@@ -331,7 +324,7 @@ END;
 /
 
 -- ============================================================================
--- 15. cinema_detail_reservation  (ClassFille)
+-- 15. cinema_detail_reservation
 -- ============================================================================
 CREATE TABLE cinema_detail_reservation (
     id             VARCHAR2(50)  PRIMARY KEY,
@@ -358,7 +351,7 @@ END;
 /
 
 -- ============================================================================
--- 16. cinema_hist_statut_reserv  (historique des statuts de réservation)
+-- 16. cinema_hist_statut_reserv
 -- ============================================================================
 CREATE TABLE cinema_hist_statut_reserv (
     id                    VARCHAR2(50) PRIMARY KEY,
@@ -383,7 +376,7 @@ END;
 /
 
 -- ============================================================================
--- 17. cinema_facture_client  (ClassEtat)
+-- 17. cinema_facture_client
 -- ============================================================================
 CREATE TABLE cinema_facture_client (
     id             VARCHAR2(50)  PRIMARY KEY,
@@ -398,7 +391,6 @@ CREATE TABLE cinema_facture_client (
     CONSTRAINT CFCT_NUMERO_UK      UNIQUE (numero)
 );
 
--- NOTE : pas d'index séparé sur idreservation — CFCT_RESERVATION_UK l'indexe déjà
 CREATE INDEX CFCT_DATE_IDX ON cinema_facture_client(datefacture);
 
 CREATE SEQUENCE SEQ_CINEMA_FACTURE_CLIENT START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -412,10 +404,7 @@ END;
 
 -- ============================================================================
 -- VUES _LIB
--- On ne crée PAS cinema_programme_lib (abandonnée)
 -- ============================================================================
-
--- Vue place avec range + salle + catégorie range
 CREATE OR REPLACE VIEW cinema_place_lib AS
 SELECT pl.id,
        pl.libelle,
@@ -432,7 +421,6 @@ JOIN cinema_range r  ON r.id  = pl.idrange
 JOIN cinema_salle s  ON s.id  = r.idsalle
 JOIN cinema_categorie_range cr ON cr.id = r.idcategorierange;
 
--- Vue detail_programme avec libellé film + durée
 CREATE OR REPLACE VIEW cinema_detail_programme_lib AS
 SELECT d.id,
        d.idprogramme,

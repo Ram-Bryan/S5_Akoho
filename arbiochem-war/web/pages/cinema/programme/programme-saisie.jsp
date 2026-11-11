@@ -25,7 +25,7 @@
     pi.setLien((String) session.getValue("lien"));
     pi.setTitre("Saisie d'un programme");
 
-    // ---------- MÈRE : listes ----------
+    // ---------- MÈRE : dropdowns ----------
     Liste listeSalle = new Liste("idsalle", new CinemaSalle(), "libelle", "id");
     pi.getFormu().changerEnChamp(new Liste[]{ listeSalle });
 
@@ -34,6 +34,11 @@
     pi.getFormu().getChamp("datedebut").setDefaut(Utilitaire.dateDuJour());
     pi.getFormu().getChamp("heuredebut").setLibelle("Heure de début (HH:mm)");
     pi.getFormu().getChamp("heuredebut").setDefaut("14:00");
+
+    // Prix
+    pi.getFormu().getChamp("prix").setLibelle("Prix (Ar)");
+    pi.getFormu().getChamp("prix").setDefaut("0");
+
     pi.getFormu().getChamp("etat").setVisible(false);
     pi.getFormu().getChamp("etat").setDefaut("1");
     pi.getFormu().getChamp("iduser").setVisible(false);
@@ -46,7 +51,6 @@
     pi.getFormufle().getChamp("idfilm_0").setLibelle("Film");
     pi.getFormufle().getChamp("rang_0").setLibelle("Rang (1, 2, 3...)");
 
-    // Masquer colonnes techniques filles
     Champ.setVisible(pi.getFormufle().getChampMulitple("id").getListeChamp(), false);
     Champ.setVisible(pi.getFormufle().getChampMulitple("idprogramme").getListeChamp(), false);
     Champ.setVisible(pi.getFormufle().getChampMulitple("etat").getListeChamp(), false);

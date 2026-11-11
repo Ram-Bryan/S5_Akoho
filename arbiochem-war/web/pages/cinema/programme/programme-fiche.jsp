@@ -19,9 +19,10 @@
     pc.getChampByName("idsalle").setLibelle("Salle");
     pc.getChampByName("datedebut").setLibelle("Date début");
     pc.getChampByName("heuredebut").setLibelle("Heure début");
+    pc.getChampByName("prix").setLibelle("Prix (Ar)");
     pc.getChampByName("etat").setLibelle("&Eacute;tat");
     pc.getChampByName("iduser").setVisible(false);
-    pc.setOrdre(new String[]{"id", "idsalle", "datedebut", "heuredebut", "etat"});
+    pc.setOrdre(new String[]{"id", "idsalle", "datedebut", "heuredebut", "prix", "etat"});
 
     String pageRetour = "cinema/programme/programme-liste.jsp";
     String pageActuel = "cinema/programme/programme-fiche.jsp";
