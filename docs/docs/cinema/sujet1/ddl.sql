@@ -337,14 +337,12 @@ CREATE TABLE cinema_facture_client (
     numero         VARCHAR2(30)  NOT NULL,
     idreservation  VARCHAR2(50)  NOT NULL,
     datefacture    DATE          NOT NULL,
-    montanttotal   NUMBER(15,2)  NOT NULL,
     etat           NUMBER(2)     DEFAULT 1 NOT NULL,
     iduser         VARCHAR2(50)  DEFAULT '0',
     CONSTRAINT CFCT_RESERVATION_FK FOREIGN KEY (idreservation) 
         REFERENCES cinema_reservation(id),
     CONSTRAINT CFCT_RESERVATION_UK UNIQUE (idreservation),
-    CONSTRAINT CFCT_NUMERO_UK      UNIQUE (numero),
-    CONSTRAINT CK_CFCT_MONTANT CHECK (montanttotal >= 0)
+    CONSTRAINT CFCT_NUMERO_UK      UNIQUE (numero)
 );
 
 -- NOTE: CFCT_RESERVATION_IDX removed — CFCT_RESERVATION_UK already indexes idreservation

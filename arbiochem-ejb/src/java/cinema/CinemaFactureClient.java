@@ -9,7 +9,6 @@ public class CinemaFactureClient extends ClassEtat {
     private String numero;
     private String idreservation;
     private Date datefacture;
-    private double montanttotal;
     private int etat;
     private String iduser;
 
@@ -73,14 +72,6 @@ public class CinemaFactureClient extends ClassEtat {
 
     public void setDatefacture(Date datefacture) {
         this.datefacture = datefacture;
-    }
-
-    public double getMontanttotal() {
-        return montanttotal;
-    }
-
-    public void setMontanttotal(double montanttotal) {
-        this.montanttotal = montanttotal;
     }
 
     @Override
