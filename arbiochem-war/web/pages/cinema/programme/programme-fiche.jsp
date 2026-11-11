@@ -3,6 +3,8 @@
 <%@ page import="affichage.PageConsulte" %>
 <%@ page import="cinema.CinemaProgramme" %>
 <%@ page import="constante.ConstanteEtat" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %>
 
 <% try {
     UserEJB u = (user.UserEJB) session.getValue("u");
@@ -14,21 +16,25 @@
     String id = pc.getBase().getTuppleID();
 
     pc.getChampByName("id").setLibelle("Id");
-    pc.getChampByName("idfilm").setLibelle("Film");
     pc.getChampByName("idsalle").setLibelle("Salle");
     pc.getChampByName("datedebut").setLibelle("Date début");
     pc.getChampByName("heuredebut").setLibelle("Heure début");
-    pc.getChampByName("datefin").setLibelle("Date fin");
-    pc.getChampByName("heurefin").setLibelle("Heure fin");
-    pc.getChampByName("prixbase").setLibelle("Prix base");
     pc.getChampByName("etat").setLibelle("&Eacute;tat");
     pc.getChampByName("iduser").setVisible(false);
-    pc.setOrdre(new String[]{"id", "idfilm", "idsalle", "datedebut", "heuredebut", "datefin", "heurefin", "prixbase", "etat"});
+    pc.setOrdre(new String[]{"id", "idsalle", "datedebut", "heuredebut", "etat"});
 
     String pageRetour = "cinema/programme/programme-liste.jsp";
     String pageActuel = "cinema/programme/programme-fiche.jsp";
     String pageModif  = "cinema/programme/programme-saisie.jsp&acte=update";
     String classe     = "cinema.CinemaProgramme";
+
+    Map<String, String> map = new HashMap<>();
+    map.put("inc/programme-films", "");
+    map.put("inc/programme-historique-prix", "");
+    String tab = request.getParameter("tab");
+    if (tab == null) tab = "inc/programme-films";
+    map.put(tab, "active");
+    tab = tab + ".jsp";
 %>
 <div class="content-wrapper">
     <h1 class="box-title">
@@ -55,6 +61,25 @@
                 </div>
                 <br/>
             </div></div></div>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col-md-12 nopadding">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="<%=map.get("inc/programme-films")%>">
+                        <a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=inc/programme-films">Films</a>
+                    </li>
+                    <li class="<%=map.get("inc/programme-historique-prix")%>">
+                        <a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=inc/programme-historique-prix">Historique prix</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <jsp:include page="<%= tab %>">
+                        <jsp:param name="id" value="<%= id %>" />
+                    </jsp:include>
+                </div>
+            </div>
         </div>
     </div>
 </div>

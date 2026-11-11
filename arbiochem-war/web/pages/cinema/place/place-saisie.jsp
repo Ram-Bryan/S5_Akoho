@@ -16,13 +16,15 @@
     pi.setLien((String) session.getValue("lien"));
     pi.setTitre("Saisie place");
 
-    // 1. changerEnChamp AVANT setLibelle
     Liste listeRange = new Liste("idrange", new CinemaRange(), "libelle", "id");
     pi.getFormu().changerEnChamp(new Liste[]{ listeRange });
 
-    // 2. Libellés
     pi.getFormu().getChamp("libelle").setLibelle("Libellé (ex: A1)");
     pi.getFormu().getChamp("idrange").setLibelle("Range");
+    pi.getFormu().getChamp("etat").setVisible(false);
+    pi.getFormu().getChamp("etat").setDefaut("1");
+    pi.getFormu().getChamp("iduser").setVisible(false);
+    pi.getFormu().getChamp("iduser").setDefaut("0");
 
     String acte = request.getParameter("acte");
     if (acte != null && acte.equalsIgnoreCase("update")) pi.setTitre("Modification place");

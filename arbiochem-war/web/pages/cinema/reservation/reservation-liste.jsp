@@ -4,9 +4,9 @@
 
 <% try {
     CinemaReservation o = new CinemaReservation();
-    String[] listeCrt  = {"id", "idclient", "idprogramme", "datereservation"};
+    String[] listeCrt  = {"id", "idclient", "iddetailprogramme", "datereservation"};
     String[] listeInt  = {"datereservation"};
-    String[] libEntete = {"id", "idclient", "idprogramme", "datereservation", "idstatutreservation", "etat"};
+    String[] libEntete = {"id", "idclient", "iddetailprogramme", "datereservation", "idstatutreservation", "etat"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des réservations");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
@@ -15,7 +15,7 @@
 
     pr.getFormu().getChamp("id").setLibelle("Id");
     pr.getFormu().getChamp("idclient").setLibelle("Client");
-    pr.getFormu().getChamp("idprogramme").setLibelle("Programme");
+    pr.getFormu().getChamp("iddetailprogramme").setLibelle("Film programmé");
     pr.getFormu().getChamp("datereservation1").setLibelle("Date min");
     pr.getFormu().getChamp("datereservation2").setLibelle("Date max");
 
@@ -34,7 +34,7 @@
     pr.getTableau().setColonneLien(colonneLien);
     pr.getTableau().setAttLien(attributLien);
 
-    String[] libEnteteAffiche = {"Id", "Client", "Programme", "Date", "Statut", "&Eacute;tat"};
+    String[] libEnteteAffiche = {"Id", "Client", "Film programmé", "Date", "Statut", "&Eacute;tat"};
     pr.getTableau().setLibelleAffiche(libEnteteAffiche);
 %>
 <div class="content-wrapper">

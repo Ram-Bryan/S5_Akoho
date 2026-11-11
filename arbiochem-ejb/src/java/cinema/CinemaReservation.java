@@ -4,11 +4,10 @@ import bean.ClassMere;
 import java.sql.Connection;
 import java.sql.Date;
 
-
 public class CinemaReservation extends ClassMere {
     private String id;
     private String idclient;
-    private String idprogramme;
+    private String iddetailprogramme;
     private Date datereservation;
     private String idstatutreservation;
     private int etat;
@@ -38,12 +37,12 @@ public class CinemaReservation extends ClassMere {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"idclient", "idprogramme", "datereservation"};
+        return new String[]{"idclient", "iddetailprogramme", "datereservation"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"idclient", "idprogramme", "datereservation"};
+        return new String[]{"idclient", "iddetailprogramme", "datereservation"};
     }
 
     public String getId() {
@@ -62,12 +61,22 @@ public class CinemaReservation extends ClassMere {
         this.idclient = idclient;
     }
 
-    public String getIdprogramme() {
-        return idprogramme;
+    // Getter/setter canoniques dérivés du nom de colonne
+    public String getIddetailprogramme() {
+        return iddetailprogramme;
     }
 
-    public void setIdprogramme(String idprogramme) {
-        this.idprogramme = idprogramme;
+    public void setIddetailprogramme(String iddetailprogramme) {
+        this.iddetailprogramme = iddetailprogramme;
+    }
+
+    // Alias camelCase lisibles (pour le code JSP, non utilisés par le framework)
+    public String getIdDetailProgramme() {
+        return iddetailprogramme;
+    }
+
+    public void setIdDetailProgramme(String iddetailprogramme) {
+        this.iddetailprogramme = iddetailprogramme;
     }
 
     public Date getDatereservation() {

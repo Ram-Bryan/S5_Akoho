@@ -17,13 +17,13 @@
 
     pc.getChampByName("id").setLibelle("Id");
     pc.getChampByName("idclient").setLibelle("Client");
-    pc.getChampByName("idprogramme").setLibelle("Programme");
+    pc.getChampByName("iddetailprogramme").setLibelle("Film programmé");
     pc.getChampByName("datereservation").setLibelle("Date de réservation");
     pc.getChampByName("idstatutreservation").setLibelle("Statut");
     pc.getChampByName("etat").setLibelle("&Eacute;tat");
     pc.getChampByName("iduser").setVisible(false);
 
-    String[] ordre = {"id", "idclient", "idprogramme", "datereservation", "idstatutreservation", "etat"};
+    String[] ordre = {"id", "idclient", "iddetailprogramme", "datereservation", "idstatutreservation", "etat"};
     pc.setOrdre(ordre);
 
     String pageRetour      = "cinema/reservation/reservation-liste.jsp";

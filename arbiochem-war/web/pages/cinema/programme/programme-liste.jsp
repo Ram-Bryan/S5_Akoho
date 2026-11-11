@@ -1,20 +1,25 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ page import="affichage.PageRecherche" %>
+<%@ page import="affichage.Liste" %>
 <%@ page import="cinema.CinemaProgramme" %>
+<%@ page import="cinema.CinemaSalle" %>
 
 <% try {
     CinemaProgramme o = new CinemaProgramme();
-    String[] listeCrt  = {"id", "idfilm", "idsalle", "datedebut"};
+    String[] listeCrt  = {"id", "idsalle", "datedebut"};
     String[] listeInt  = {"datedebut"};
-    String[] libEntete = {"id", "idfilm", "idsalle", "datedebut", "heuredebut", "prixbase", "etat"};
+    String[] libEntete = {"id", "idsalle", "datedebut", "heuredebut", "etat"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des programmes");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
     pr.setLien((String) session.getValue("lien"));
     pr.setApres("cinema/programme/programme-liste.jsp");
 
+    // Salle en dropdown (affiche le libellé de la salle)
+    Liste listeSalle = new Liste("idsalle", new CinemaSalle(), "libelle", "id");
+    pr.getFormu().changerEnChamp(new Liste[]{ listeSalle });
+
     pr.getFormu().getChamp("id").setLibelle("Id");
-    pr.getFormu().getChamp("idfilm").setLibelle("Film");
     pr.getFormu().getChamp("idsalle").setLibelle("Salle");
     pr.getFormu().getChamp("datedebut1").setLibelle("Date min");
     pr.getFormu().getChamp("datedebut2").setLibelle("Date max");
@@ -30,7 +35,7 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/programme/programme-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Film", "Salle", "Date début", "Heure", "Prix base", "&Eacute;tat"});
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Salle", "Date début", "Heure début", "&Eacute;tat"});
 %>
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>

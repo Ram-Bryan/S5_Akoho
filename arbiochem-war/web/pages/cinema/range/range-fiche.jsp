@@ -18,6 +18,8 @@
     pc.getChampByName("libelle").setLibelle("Libellé");
     pc.getChampByName("idsalle").setLibelle("Salle");
     pc.getChampByName("idcategorierange").setLibelle("Catégorie de range");
+    pc.getChampByName("etat").setVisible(false);
+    pc.getChampByName("iduser").setVisible(false);
     pc.setOrdre(new String[]{"id", "libelle", "idsalle", "idcategorierange"});
 
     String pageRetour = "cinema/range/range-liste.jsp";

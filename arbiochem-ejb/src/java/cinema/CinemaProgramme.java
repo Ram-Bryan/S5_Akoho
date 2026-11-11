@@ -1,23 +1,21 @@
 package cinema;
 
-import bean.ClassEtat;
+import bean.ClassMere;
 import java.sql.Connection;
 import java.sql.Date;
 
-public class CinemaProgramme extends ClassEtat {
+public class CinemaProgramme extends ClassMere {
     private String id;
-    private String idfilm;
     private String idsalle;
     private Date datedebut;
     private String heuredebut;
-    private Date datefin;
-    private String heurefin;
-    private double prixbase;
     private int etat;
     private String iduser;
 
     public CinemaProgramme() throws Exception {
         this.setNomTable("cinema_programme");
+        this.setNomClasseFille("cinema.CinemaDetailProgramme");
+        this.setLiaisonFille("idprogramme");
     }
 
     @Override
@@ -38,12 +36,12 @@ public class CinemaProgramme extends ClassEtat {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"idfilm", "idsalle", "datedebut", "heuredebut"};
+        return new String[]{"idsalle", "datedebut", "heuredebut"};
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"idfilm", "idsalle", "datedebut", "heuredebut"};
+        return new String[]{"idsalle", "datedebut", "heuredebut"};
     }
 
     public String getId() {
@@ -52,14 +50,6 @@ public class CinemaProgramme extends ClassEtat {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getIdfilm() {
-        return idfilm;
-    }
-
-    public void setIdfilm(String idfilm) {
-        this.idfilm = idfilm;
     }
 
     public String getIdsalle() {
@@ -84,30 +74,6 @@ public class CinemaProgramme extends ClassEtat {
 
     public void setHeuredebut(String heuredebut) {
         this.heuredebut = heuredebut;
-    }
-
-    public Date getDatefin() {
-        return datefin;
-    }
-
-    public void setDatefin(Date datefin) {
-        this.datefin = datefin;
-    }
-
-    public String getHeurefin() {
-        return heurefin;
-    }
-
-    public void setHeurefin(String heurefin) {
-        this.heurefin = heurefin;
-    }
-
-    public double getPrixbase() {
-        return prixbase;
-    }
-
-    public void setPrixbase(double prixbase) {
-        this.prixbase = prixbase;
     }
 
     @Override

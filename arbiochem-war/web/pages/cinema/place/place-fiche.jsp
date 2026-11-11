@@ -15,6 +15,8 @@
     pc.getChampByName("id").setLibelle("Id");
     pc.getChampByName("libelle").setLibelle("Libellé");
     pc.getChampByName("idrange").setLibelle("Range");
+    pc.getChampByName("etat").setVisible(false);
+    pc.getChampByName("iduser").setVisible(false);
     pc.setOrdre(new String[]{"id", "libelle", "idrange"});
 
     String pageRetour = "cinema/place/place-liste.jsp";
@@ -45,4 +47,4 @@
 </div>
 <% } catch (Exception e) { e.printStackTrace(); %>
 <script language="JavaScript"> alert('<%=e.getMessage()%>'); history.back(); </script>
-<% }%>  
+<% }%>

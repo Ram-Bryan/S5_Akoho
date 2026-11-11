@@ -1,16 +1,20 @@
 package cinema;
 
-import bean.ClassMAPTable;
+import bean.ClassMere;
 import java.sql.Connection;
 
-public class CinemaRange extends ClassMAPTable {
+public class CinemaRange extends ClassMere {
     private String id;
     private String libelle;
     private String idsalle;
     private String idcategorierange;
+    private int etat;
+    private String iduser;
 
     public CinemaRange() throws Exception {
         this.setNomTable("cinema_range");
+        this.setNomClasseFille("cinema.CinemaPlace");
+        this.setLiaisonFille("idrange");
     }
 
     @Override
@@ -69,5 +73,23 @@ public class CinemaRange extends ClassMAPTable {
 
     public void setIdcategorierange(String idcategorierange) {
         this.idcategorierange = idcategorierange;
+    }
+
+    @Override
+    public int getEtat() {
+        return etat;
+    }
+
+    @Override
+    public void setEtat(int etat) {
+        this.etat = etat;
+    }
+
+    public String getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(String iduser) {
+        this.iduser = iduser;
     }
 }

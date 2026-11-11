@@ -6,8 +6,7 @@
 <%@ page import="cinema.CinemaReservation" %>
 <%@ page import="cinema.CinemaDetailReservation" %>
 <%@ page import="cinema.CinemaClient" %>
-<%@ page import="cinema.CinemaProgramme" %>
-<%@ page import="cinema.CinemaPlace" %>
+<%@ page import="cinema.CinemaDetailProgrammeLib" %>
 <%@ page import="cinema.CinemaPlace" %>
 <%@ page import="cinema.ConstanteCinema" %>
 
@@ -26,15 +25,14 @@
     PageInsertMultiple pi = new PageInsertMultiple(mere, fille, request, taille, u);
     pi.setLien((String) session.getValue("lien"));
     pi.setTitre("Saisie d'une réservation");
-    
-    // Transformer en listes déroulantes
-    Liste listeClient = new Liste("idclient", new CinemaClient(), "nom", "id");
-    Liste listeProgramme = new Liste("idprogramme", new CinemaProgramme(), "id", "id");
-    pi.getFormu().changerEnChamp(new Liste[]{ listeClient, listeProgramme });
 
-    // ---------- MÈRE : libellés + listes ----------
+    // Mère — dropdowns
+    Liste listeClient = new Liste("idclient", new CinemaClient(), "nom", "id");
+    Liste listeDetailProg = new Liste("iddetailprogramme", new CinemaDetailProgrammeLib(), "filmlib", "id");
+    pi.getFormu().changerEnChamp(new Liste[]{ listeClient, listeDetailProg });
+
     pi.getFormu().getChamp("idclient").setLibelle("Client");
-    pi.getFormu().getChamp("idprogramme").setLibelle("Programme");
+    pi.getFormu().getChamp("iddetailprogramme").setLibelle("Film programmé");
     pi.getFormu().getChamp("datereservation").setLibelle("Date de réservation");
     pi.getFormu().getChamp("datereservation").setDefaut(utilitaire.Utilitaire.dateDuJour());
 
@@ -46,20 +44,17 @@
     pi.getFormu().getChamp("iduser").setVisible(false);
     pi.getFormu().getChamp("iduser").setDefaut("0");
 
-    // Liste des places
+    // Filles — place dropdown
     Liste listePlace = new Liste("idplace", new CinemaPlace(), "libelle", "id");
     pi.getFormufle().changerEnChamp(new Liste[]{ listePlace });
 
-    // ---------- FILLES : libellés + listes ----------
     pi.getFormufle().getChamp("idplace_0").setLibelle("Place");
 
-    // Masquer les colonnes techniques
     Champ.setVisible(pi.getFormufle().getChampMulitple("id").getListeChamp(), false);
     Champ.setVisible(pi.getFormufle().getChampMulitple("idreservation").getListeChamp(), false);
     Champ.setVisible(pi.getFormufle().getChampMulitple("etat").getListeChamp(), false);
     Champ.setVisible(pi.getFormufle().getChampMulitple("iduser").getListeChamp(), false);
 
-    // Ordre des colonnes filles
     String[] colOrdre = {"idplace"};
     pi.getFormufle().setColOrdre(colOrdre);
 
