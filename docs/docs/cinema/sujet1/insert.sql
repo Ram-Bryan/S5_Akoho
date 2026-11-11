@@ -46,9 +46,8 @@ VALUES ('CHPR000006', 'CCRG000003', 5000, TRUNC(SYSDATE));
 -- 4. Statuts de réservation (4 statuts — IDs fixes dans ConstanteCinema)
 -- ============================================================================
 INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000001', 'reserve');
-INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000002', 'paye');
-INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000003', 'annule');
-INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000004', 'expire');
+INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000002', 'annule');
+INSERT INTO cinema_statut_reservation (id, libelle) VALUES ('CSTR000003', 'expire');
 
 -- ============================================================================
 -- 5. Salles (4 salles)
@@ -409,8 +408,8 @@ ALTER SEQUENCE SEQ_CINEMA_CLIENT INCREMENT BY 3;
 SELECT SEQ_CINEMA_CLIENT.NEXTVAL FROM DUAL;
 ALTER SEQUENCE SEQ_CINEMA_CLIENT INCREMENT BY 1;
 
--- STATUT_RESERVATION : prochaine valeur = 5
-ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 4;
+-- STATUT_RESERVATION : prochaine valeur = 4
+ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 3;
 SELECT SEQ_CINEMA_STATUT_RESERVATION.NEXTVAL FROM DUAL;
 ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 1;
 

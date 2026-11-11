@@ -173,31 +173,20 @@ BEGIN
   RETURN v_seq;
 END;
 /
-
 -- ============================================================================
--- 9. cinema_programme  (ClassEtat)
+-- 2. NOUVELLE TABLE cinema_programme  (mère, sans date_fin, sans prix)
 -- ============================================================================
 CREATE TABLE cinema_programme (
     id           VARCHAR2(50)  PRIMARY KEY,
-    idfilm       VARCHAR2(50)  NOT NULL,
     idsalle      VARCHAR2(50)  NOT NULL,
     datedebut    DATE          NOT NULL,
     heuredebut   VARCHAR2(5)   NOT NULL,
-    datefin      DATE          NOT NULL,
-    heurefin     VARCHAR2(5)   NOT NULL,
-    prixbase     NUMBER(15,2)  NOT NULL,
     etat         NUMBER(2)     DEFAULT 1 NOT NULL,
     iduser       VARCHAR2(50)  DEFAULT '0',
-    CONSTRAINT CPRG_FILM_FK  FOREIGN KEY (idfilm)  REFERENCES cinema_film(id),
     CONSTRAINT CPRG_SALLE_FK FOREIGN KEY (idsalle) REFERENCES cinema_salle(id),
-    CONSTRAINT CK_CPRG_PRIX      CHECK (prixbase >= 0),
-    CONSTRAINT CK_CPRG_DATES CHECK (
-        datefin > datedebut 
-        OR (datefin = datedebut AND heurefin > heuredebut)
-    )
+    CONSTRAINT CK_CPRG_HEURE CHECK (REGEXP_LIKE(heuredebut, '^[0-2][0-9]:[0-5][0-9]$'))
 );
 
-CREATE INDEX CPRG_FILM_IDX  ON cinema_programme(idfilm);
 CREATE INDEX CPRG_SALLE_IDX ON cinema_programme(idsalle, datedebut, heuredebut);
 
 CREATE SEQUENCE SEQ_CINEMA_PROGRAMME START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -205,6 +194,58 @@ CREATE OR REPLACE FUNCTION getseq_cinema_programme RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
   SELECT SEQ_CINEMA_PROGRAMME.NEXTVAL INTO v_seq FROM DUAL;
+  RETURN v_seq;
+END;
+/
+
+
+-- ============================================================================
+-- 3. NOUVELLE TABLE cinema_detail_programme  (fille, les films de la séance)
+-- ============================================================================
+CREATE TABLE cinema_detail_programme (
+    id                 VARCHAR2(50) PRIMARY KEY,
+    idprogramme        VARCHAR2(50) NOT NULL,
+    idfilm             VARCHAR2(50) NOT NULL,
+    rang               NUMBER(3)    DEFAULT 1 NOT NULL,
+    etat               NUMBER(2)    DEFAULT 1 NOT NULL,
+    iduser             VARCHAR2(50) DEFAULT '0',
+    CONSTRAINT CDPRG_PROGRAMME_FK FOREIGN KEY (idprogramme) REFERENCES cinema_programme(id),
+    CONSTRAINT CDPRG_FILM_FK      FOREIGN KEY (idfilm)      REFERENCES cinema_film(id),
+    CONSTRAINT CK_CDPRG_RANG CHECK (rang >= 1)
+);
+
+CREATE INDEX CDPRG_PROGRAMME_IDX ON cinema_detail_programme(idprogramme);
+CREATE INDEX CDPRG_FILM_IDX      ON cinema_detail_programme(idfilm);
+
+CREATE SEQUENCE SEQ_CINEMA_DETAIL_PROGRAMME START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cinema_detail_programme RETURN NUMBER IS
+  v_seq NUMBER;
+BEGIN
+  SELECT SEQ_CINEMA_DETAIL_PROGRAMME.NEXTVAL INTO v_seq FROM DUAL;
+  RETURN v_seq;
+END;
+/
+
+
+-- ============================================================================
+-- 4. NOUVELLE TABLE cinema_historique_prix_programme  (prix historisé)
+-- ============================================================================
+CREATE TABLE cinema_historique_prix_programme (
+    id            VARCHAR2(50)  PRIMARY KEY,
+    idprogramme   VARCHAR2(50)  NOT NULL,
+    prix          NUMBER(15,2)  NOT NULL,
+    datedebut    DATE          NOT NULL,
+    CONSTRAINT CHPPROG_PROGRAMME_FK FOREIGN KEY (idprogramme) REFERENCES cinema_programme(id),
+    CONSTRAINT CK_CHPPROG_PRIX CHECK (prix >= 0)
+);
+
+CREATE INDEX CHPPROG_PROGRAMME_IDX ON cinema_historique_prix_programme(idprogramme, datedebut);
+
+CREATE SEQUENCE SEQ_CINEMA_HIST_PRIX_PROGRAMME START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cinema_hist_prix_programme RETURN NUMBER IS
+  v_seq NUMBER;
+BEGIN
+  SELECT SEQ_CINEMA_HIST_PRIX_PROGRAMME.NEXTVAL INTO v_seq FROM DUAL;
   RETURN v_seq;
 END;
 /
@@ -394,5 +435,17 @@ FROM cinema_place pl
 JOIN cinema_range r ON r.id = pl.idrange
 JOIN cinema_salle s ON s.id = r.idsalle
 JOIN cinema_categorie_range cr ON cr.id = r.idcategorierange;
+
+CREATE OR REPLACE VIEW cinema_detail_programme_lib AS
+SELECT d.id,
+       d.idprogramme,
+       d.idfilm,
+       f.titre AS filmlib,
+       f.duree AS filmeduree,
+       d.rang,
+       d.etat,
+       d.iduser
+FROM cinema_detail_programme d
+JOIN cinema_film f ON f.id = d.idfilm;
 
 COMMIT;

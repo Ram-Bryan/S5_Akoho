@@ -52,11 +52,21 @@
 
 ### cinema_programme
 - id
-- id_film
 - id_salle
 - date_debut
-- date_fin
-- prix_base
+
+### historique_prix_cinema_programme
+- id
+- id_cinema_programme
+- date_debut
+- prix
+
+### cinema_detail_programme
+- id
+- id_cinema_programme
+- id_film
+
+La date de fin d'un programme (heure) est calculer a partir des sommes des minutes de ces filles 
 
 ---
 
