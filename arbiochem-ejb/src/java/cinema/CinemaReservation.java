@@ -3,6 +3,9 @@ package cinema;
 import bean.ClassMere;
 import java.sql.Connection;
 import java.sql.Date;
+import bean.CGenUtil;
+
+import bean.CGenUtil;
 
 public class CinemaReservation extends ClassMere {
     private String id;
@@ -37,12 +40,12 @@ public class CinemaReservation extends ClassMere {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"idclient", "iddetailprogramme", "datereservation"};
+        return new String[] { "idclient", "iddetailprogramme", "datereservation" };
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"idclient", "iddetailprogramme", "datereservation"};
+        return new String[] { "idclient", "iddetailprogramme", "datereservation" };
     }
 
     public String getId() {
@@ -111,5 +114,82 @@ public class CinemaReservation extends ClassMere {
 
     public void setIduser(String iduser) {
         this.iduser = iduser;
+    }
+
+    // ============================================================================
+    // createObject : initialise le statut à "reserve" + trace dans l'historique
+    // ============================================================================
+    @Override
+    public ClassMAPTable createObject(String refUser, Connection c) throws Exception {
+        // 1. Statut initial par défaut : reserve
+        if (this.getIdstatutreservation() == null
+                || this.getIdstatutreservation().trim().isEmpty()) {
+            this.setIdstatutreservation(ConstanteCinema.STATUTRESERVE);
+        }
+
+        // 2. Insertion standard (réservation + filles + audit framework)
+        ClassMAPTable result = super.createObject(refUser, c);
+
+        // 3. Trace initiale dans le journal
+        CinemaHistoriqueStatutReservation hist = new CinemaHistoriqueStatutReservation();
+        hist.setIdreservation(this.getId());
+        hist.setIdstatutreservation(this.getIdstatutreservation());
+        hist.setDatehist(utilitaire.Utilitaire.dateDuJourSql());
+        hist.construirePK(c);
+        hist.insertToTableWithHisto(refUser, c);
+
+        return result;
+    }
+
+    // ============================================================================
+    // changerStatut : transition contrôlée + historique
+    // ============================================================================
+    public void changerStatut(String nouvelIdStatut, String refUser, Connection c) throws Exception {
+        if (nouvelIdStatut == null || nouvelIdStatut.trim().isEmpty()) {
+            throw new Exception("Nouveau statut requis");
+        }
+
+        String ancienIdStatut = this.getIdstatutreservation();
+
+        // Si pas de changement, on ne fait rien
+        if (nouvelIdStatut.equals(ancienIdStatut))
+            return;
+
+        // Règles de transition
+        // statut terminal (annule / expire) → tout autre ❌
+        if (ConstanteCinema.STATUTANNULE.equals(ancienIdStatut)
+                || ConstanteCinema.STATUTEXPIRE.equals(ancienIdStatut)) {
+            throw new Exception(
+                    "Impossible de changer le statut d'une réservation déjà " + ancienIdStatut);
+        }
+        if (!ConstanteCinema.STATUTRESERVE.equals(ancienIdStatut)) {
+            throw new Exception(
+                    "Transition non autorisée depuis " + ancienIdStatut + " vers " + nouvelIdStatut);
+        }
+
+        // 1. Update la réservation (UPDATE normal)
+        this.setIdstatutreservation(nouvelIdStatut);
+        this.updateToTableWithHisto(refUser, c);
+
+        // 2. Insert dans le journal
+        CinemaHistoriqueStatutReservation hist = new CinemaHistoriqueStatutReservation();
+        hist.setIdreservation(this.getId());
+        hist.setIdstatutreservation(nouvelIdStatut);
+        hist.setDatehist(utilitaire.Utilitaire.dateDuJourSql());
+        hist.construirePK(c);
+        hist.insertToTableWithHisto(refUser, c);
+    }
+
+    // ============================================================================
+    // controlerDelete : ne pas supprimer une réservation non-reserve
+    // ============================================================================
+    @Override
+    public void controlerDelete(Connection c) throws Exception {
+        if (this.getIdstatutreservation() != null
+                && !ConstanteCinema.STATUTRESERVE.equals(this.getIdstatutreservation())) {
+            throw new Exception(
+                    "Impossible de supprimer une réservation dont le statut n'est plus 'reserve'. "
+                            + "Annulez-la à la place.");
+        }
     }
 }

@@ -36,12 +36,12 @@ public class CinemaProgramme extends ClassMere {
 
     @Override
     public String[] getMotCles() {
-        return new String[]{"idsalle", "datedebut", "heuredebut"};
+        return new String[] { "idsalle", "datedebut", "heuredebut" };
     }
 
     @Override
     public String[] getValMotCles() {
-        return new String[]{"idsalle", "datedebut", "heuredebut"};
+        return new String[] { "idsalle", "datedebut", "heuredebut" };
     }
 
     public String getId() {
@@ -92,5 +92,16 @@ public class CinemaProgramme extends ClassMere {
 
     public void setIduser(String iduser) {
         this.iduser = iduser;
+    }
+
+    // ============================================================================
+    // Raccourcis : prix du programme à une date / aujourd'hui
+    // ============================================================================
+    public double getPrixEnVigueur(Date dateRef, Connection c) throws Exception {
+        return CinemaHistoriquePrixProgramme.getPrixEnVigueur(this.getId(), dateRef, c);
+    }
+
+    public double getPrixActuel(Connection c) throws Exception {
+        return CinemaHistoriquePrixProgramme.getPrixActuel(this.getId(), c);
     }
 }
