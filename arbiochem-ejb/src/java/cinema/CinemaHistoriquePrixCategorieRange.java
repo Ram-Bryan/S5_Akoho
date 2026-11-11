@@ -79,13 +79,14 @@ public class CinemaHistoriquePrixCategorieRange extends ClassMAPTable {
     // (préserve l'intégrité historique — voir règle métier)
     // ============================================================================
     @Override
-    public void updateToTableWithHisto(String refUser, Connection c) throws Exception {
+    public int updateToTableWithHisto(String refUser, Connection c) throws Exception {
         // On ne modifie JAMAIS une ligne historique.
         // On insère une nouvelle ligne avec les valeurs modifiées.
         // L'ancienne ligne reste intacte → traçabilité préservée.
         this.setId(null);
         this.construirePK(c);
         this.insertToTableWithHisto(refUser, c);
+        return 1;
     }
 
     // ============================================================================

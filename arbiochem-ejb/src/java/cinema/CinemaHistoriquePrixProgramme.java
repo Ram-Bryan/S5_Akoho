@@ -77,10 +77,11 @@ public class CinemaHistoriquePrixProgramme extends ClassMAPTable {
     // Historique append-only : tout UPDATE est transformé en INSERT
     // ============================================================================
     @Override
-    public void updateToTableWithHisto(String refUser, Connection c) throws Exception {
+    public int updateToTableWithHisto(String refUser, Connection c) throws Exception {
         this.setId(null);
         this.construirePK(c);
         this.insertToTableWithHisto(refUser, c);
+        return 1;
     }
 
     // ============================================================================

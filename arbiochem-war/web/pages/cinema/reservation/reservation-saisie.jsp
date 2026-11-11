@@ -69,8 +69,7 @@
 %>
 <div class="content-wrapper">
     <h1><%=pi.getTitre()%></h1>
-    <form id="formId" class='container' action="<%=pi.getLien()%>?but=apresMultiple.jsp" method="post">
-        <%
+<form id="formId" class='container' action="<%=pi.getLien()%>?but=cinema/reservation/reservation-confirmation.jsp" method="post">        <%
             out.println(pi.getFormu().getHtmlInsert());
             out.println(pi.getFormufle().getHtmlTableauInsert());
         %>
