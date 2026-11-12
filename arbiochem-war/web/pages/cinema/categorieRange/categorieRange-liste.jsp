@@ -4,9 +4,14 @@
 
 <% try {
     CinemaCategorieRange o = new CinemaCategorieRange();
-    String[] listeCrt  = {"id", "libelle"};
+    
+    // On ajoute "prix" aux critères si on veut pouvoir filtrer dessus
+    String[] listeCrt  = {"id", "libelle", "prix"}; 
     String[] listeInt  = {};
+    
+    // On ajoute "prix" aux colonnes affichées
     String[] libEntete = {"id", "libelle", "prix"};
+    
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des catégories de range");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
@@ -15,8 +20,9 @@
 
     pr.getFormu().getChamp("id").setLibelle("Id");
     pr.getFormu().getChamp("libelle").setLibelle("Libellé");
+    
+    // Comme "prix" est maintenant dans listeCrt, ce getChamp ne retournera plus null
     pr.getFormu().getChamp("prix").setLibelle("Supplément max");
-
 
     pr.creerObjetPage(libEntete, null);
 
@@ -29,7 +35,9 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/categorieRange/categorieRange-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Libellé", "prix"});
+    
+    // Libellés d'affichage du tableau
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Libellé", "Supplément (Ar)"});
 %>
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>

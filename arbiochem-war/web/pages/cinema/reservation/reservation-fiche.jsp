@@ -59,14 +59,25 @@
                         <br/>
                         <div class="box-footer">
                             <% if (etat < 11) { %>
-                                <a class="btn btn-primary pull-right"
-                                   href="<%= lien + "?but=apresTarif.jsp&acte=valider&id=" + id + "&bute=" + pageActuel + "&classe=" + classe + "&nomtable=cinema_reservation" %>"
-                                   style="margin-right: 10px">Viser</a>
-                                <a class="btn btn-secondary pull-right"
-                                   href="<%= lien + "?but=" + pageModif + "&id=" + id + "&acte=update" %>"
-                                   style="margin-right: 10px">Modifier</a>
-                                <a class="btn btn-danger pull-left"
-                                   href="<%= lien + "?but=apresTarif.jsp&acte=delete&id=" + id + "&bute=" + pageListe + "&classe=" + classe %>">Supprimer</a>
+                                
+                                <%-- Bouton PAYER / VALIDER (uniquement si statut = reserve) --%>
+                                <% if (ConstanteCinema.STATUTRESERVE.equals(res.getIdstatutreservation())) { %>
+                                    <a class="btn btn-primary pull-right"
+                                       href="<%= lien + "?but=apresTarif.jsp&acte=custom&acteDetail=payer&id=" + id + "&bute=" + pageActuel + "&classe=" + classe %>"
+                                       style="margin-right: 10px">
+                                       Payer / Valider
+                                    </a>
+                                    <a class="btn btn-secondary pull-right"
+                                       href="<%= lien + "?but=" + pageModif + "&id=" + id + "&acte=update" %>"
+                                       style="margin-right: 10px">Modifier</a>
+                                <% } %>
+
+                                <%-- Bouton SUPPRIMER (uniquement si statut = reserve) --%>
+                                <% if (ConstanteCinema.STATUTRESERVE.equals(res.getIdstatutreservation())) { %>
+                                    <a class="btn btn-danger pull-left"
+                                       href="<%= lien + "?but=apresTarif.jsp&acte=delete&id=" + id + "&bute=" + pageListe + "&classe=" + classe %>">Supprimer</a>
+                                <% } %>
+                                
                             <% } %>
                         </div>
                         <br/>

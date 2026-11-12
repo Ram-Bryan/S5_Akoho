@@ -17,7 +17,6 @@ public class CinemaReservation extends ClassMere {
     private Date datereservation;
     private String idstatutreservation;
 
-
     public CinemaReservation() throws Exception {
         this.setNomTable("cinema_reservation");
         this.setNomClasseFille("cinema.CinemaDetailReservation");
@@ -132,10 +131,11 @@ public class CinemaReservation extends ClassMere {
         if (filles != null) {
             for (ClassFille f : filles) {
                 CinemaDetailReservation d = (CinemaDetailReservation) f;
-                if (d.getIdplace() == null || d.getIdplace().trim().isEmpty()) continue;
-                
+                if (d.getIdplace() == null || d.getIdplace().trim().isEmpty())
+                    continue;
+
                 double prix = CinemaDetailReservation.getPrixUnitaire(
-                    this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
+                        this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
                 d.setPrixunitaire(prix);
             }
         }
@@ -150,15 +150,6 @@ public class CinemaReservation extends ClassMere {
         hist.setDatehist(Utilitaire.dateDuJourSql());
         hist.construirePK(c);
         hist.insertToTableWithHisto(refUser, c);
-
-        // 5. Facture brouillon
-        CinemaFactureClient facture = new CinemaFactureClient();
-        facture.setIdreservation(this.getId());
-        facture.setNumero(CinemaFactureClient.genererNumero(c));
-        facture.setDatefacture(Utilitaire.dateDuJourSql());
-        facture.setIduser(refUser != null ? refUser : "0");
-        facture.setEtat(1);
-        facture.createObject(refUser, c);
 
         return result;
     }
@@ -265,5 +256,49 @@ public class CinemaReservation extends ClassMere {
                     this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
         }
         return total;
+    }
+
+    // ============================================================================
+    // changeState : gère l'action "payer" (valider le paiement)
+    // ============================================================================
+        // ============================================================================
+    // changeState : gère l'action "payer"
+    // ============================================================================
+    @Override
+    public void changeState(String action, String refUser, Connection c) throws Exception {
+        if ("payer".equalsIgnoreCase(action)) {
+            if (!ConstanteCinema.STATUTRESERVE.equals(this.getIdstatutreservation())) {
+                throw new Exception("Seule une réservation au statut 'reserve' peut être payée.");
+            }
+            // 1. Statut -> paye
+            this.changerStatut(ConstanteCinema.STATUTPAYE, refUser, c);
+            // 2. Créer la facture
+            this.creerFacture(refUser, c);
+            return;
+        }
+        // Déléguer au parent pour les autres actions
+        super.changeState(action, refUser, c);
+    }
+
+    // ============================================================================
+    // creerFacture : crée la facture pour la réservation courante
+    // (appelée uniquement après passage au statut "paye")
+    // ============================================================================
+    public void creerFacture(String refUser, java.sql.Connection c) throws Exception {
+        // Vérifier qu'il n'y a pas déjà une facture (sécurité)
+        CinemaFactureClient crit = new CinemaFactureClient();
+        String where = " AND idreservation = '" + this.getId() + "' ";
+        CinemaFactureClient[] existing = (CinemaFactureClient[]) bean.CGenUtil.rechercher(crit, null, null, c, where);
+        if (existing != null && existing.length > 0) {
+            throw new Exception("Une facture existe déjà pour cette réservation.");
+        }
+
+        CinemaFactureClient facture = new CinemaFactureClient();
+        facture.setIdreservation(this.getId());
+        facture.setNumero(CinemaFactureClient.genererNumero(c));
+        facture.setDatefacture(utilitaire.Utilitaire.dateDuJourSql());
+        facture.setIduser(refUser != null ? refUser : "0");
+        facture.setEtat(1);
+        facture.createObject(refUser, c);
     }
 }
