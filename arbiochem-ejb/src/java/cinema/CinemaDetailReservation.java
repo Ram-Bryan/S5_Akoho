@@ -11,8 +11,6 @@ public class CinemaDetailReservation extends ClassFille {
     private String idplace;
     private double prixunitaire;
 
-
-
     public CinemaDetailReservation() throws Exception {
         this.setNomTable("cinema_detail_reservation");
         this.setNomClasseMere("cinema.CinemaReservation");

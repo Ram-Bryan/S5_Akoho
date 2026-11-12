@@ -1,6 +1,8 @@
 package cinema;
 
 import bean.ClassMere;
+import mg.cnaps.compta.ComptaSousEcriture;
+
 import java.sql.Connection;
 import java.sql.Date;
 import bean.CGenUtil;
@@ -136,6 +138,19 @@ public class CinemaReservation extends ClassMere {
 
                 double prix = CinemaDetailReservation.getPrixUnitaire(
                         this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
+                
+                CinemaDetailProgramme detProg = new CinemaDetailProgramme();
+                detProg = (CinemaDetailProgramme) detProg.getById(this.getIdDetailProgramme(), "cinema_detail_programme", c);
+                
+                CinemaProgramme prog = new CinemaProgramme();
+                prog = (CinemaProgramme) prog.getById(detProg.getIdprogramme(), "cinema_programme", c);
+
+                String[] p = prog.getHeuredebut().split(":");
+
+                if (p[0].equalsIgnoreCase("20") ||p[0].equalsIgnoreCase("21") || p[0].equalsIgnoreCase("22") || p[0].equalsIgnoreCase("23") || p[0].equalsIgnoreCase("00")) {
+                    prix = prix/2;
+                }
+
                 d.setPrixunitaire(prix);
             }
         }
