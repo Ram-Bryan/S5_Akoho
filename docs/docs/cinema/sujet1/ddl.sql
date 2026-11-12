@@ -232,11 +232,10 @@ BEGIN
   RETURN v_seq;
 END;
 /
-
 -- ============================================================================
--- 11. cinema_historique_prix_programme
+-- 11. cinema_hist_prix_programme  (renommé : <= 30 chars Oracle 11g)
 -- ============================================================================
-CREATE TABLE cinema_historique_prix_programme (
+CREATE TABLE cinema_hist_prix_programme (
     id           VARCHAR2(50)  PRIMARY KEY,
     idprogramme  VARCHAR2(50)  NOT NULL,
     prix         NUMBER(15,2)  NOT NULL,
@@ -246,13 +245,13 @@ CREATE TABLE cinema_historique_prix_programme (
     CONSTRAINT CK_CHPPROG_PRIX CHECK (prix >= 0)
 );
 
-CREATE INDEX CHPPROG_PROGRAMME_IDX ON cinema_historique_prix_programme(idprogramme, datedebut);
+CREATE INDEX CHPPROG_PROGRAMME_IDX ON cinema_hist_prix_programme(idprogramme, datedebut);
 
-CREATE SEQUENCE SEQ_CINEMA_HIST_PRIX_PROGRAMME START WITH 1 INCREMENT BY 1 NOCACHE;
-CREATE OR REPLACE FUNCTION getseq_cinema_hist_prix_programme RETURN NUMBER IS
+CREATE SEQUENCE SEQ_CIN_HIST_PRIX_PROG START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cin_hist_prix_prog RETURN NUMBER IS
   v_seq NUMBER;
 BEGIN
-  SELECT SEQ_CINEMA_HIST_PRIX_PROGRAMME.NEXTVAL INTO v_seq FROM DUAL;
+  SELECT SEQ_CIN_HIST_PRIX_PROG.NEXTVAL INTO v_seq FROM DUAL;
   RETURN v_seq;
 END;
 /
@@ -427,10 +426,13 @@ SELECT d.id,
        d.idfilm,
        f.titre AS filmlib,
        f.duree AS filmeduree,
+       p.idsalle,
+       d.idprogramme || ' - ' || f.titre AS programmefilm,
        d.rang,
        d.etat,
        d.iduser
 FROM cinema_detail_programme d
-JOIN cinema_film f ON f.id = d.idfilm;
+JOIN cinema_film f ON f.id = d.idfilm
+JOIN cinema_programme p ON p.id = d.idprogramme;
 
 COMMIT;

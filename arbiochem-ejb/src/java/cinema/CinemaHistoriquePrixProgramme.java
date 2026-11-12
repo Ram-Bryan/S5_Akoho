@@ -12,12 +12,12 @@ public class CinemaHistoriquePrixProgramme extends ClassMAPTable {
     private Date datedebut;
 
     public CinemaHistoriquePrixProgramme() throws Exception {
-        this.setNomTable("cinema_historique_prix_programme");
+        this.setNomTable("cinema_hist_prix_programme");
     }
 
     @Override
     public void construirePK(Connection c) throws Exception {
-        this.preparePk("CHPP", "getseq_cinema_hist_prix_programme");
+        this.preparePk("CHPP", "getseq_cin_hist_prix_prog");
         this.setId(makePK(c));
     }
 

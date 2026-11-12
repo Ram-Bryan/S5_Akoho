@@ -9,7 +9,7 @@
 <% try {
     UserEJB u = (user.UserEJB) session.getValue("u");
     String mapping  = "cinema.CinemaHistoriquePrixProgramme";
-    String nomTable = "cinema_historique_prix_programme";
+    String nomTable = "cinema_hist_prix_programme";
     String apres    = "cinema/historiquePrixProgramme/historiquePrixProgramme-fiche.jsp";
 
     CinemaHistoriquePrixProgramme o = new CinemaHistoriquePrixProgramme();

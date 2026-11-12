@@ -16,8 +16,7 @@ public class CinemaReservation extends ClassMere {
     private String iddetailprogramme;
     private Date datereservation;
     private String idstatutreservation;
-    private int etat;
-    private String iduser;
+
 
     public CinemaReservation() throws Exception {
         this.setNomTable("cinema_reservation");
@@ -101,24 +100,6 @@ public class CinemaReservation extends ClassMere {
         this.idstatutreservation = idstatutreservation;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
-
     // ============================================================================
     // createObject : orchestration transactionnelle
     // 1. Statut initial = reserve
@@ -145,6 +126,17 @@ public class CinemaReservation extends ClassMere {
                 if (!CinemaPlace.estDisponible(d.getIdplace(), this.getIddetailprogramme(), this.getId(), c)) {
                     throw new Exception("La place " + d.getIdplace() + " n'est plus disponible pour ce film programmé");
                 }
+            }
+        }
+
+        if (filles != null) {
+            for (ClassFille f : filles) {
+                CinemaDetailReservation d = (CinemaDetailReservation) f;
+                if (d.getIdplace() == null || d.getIdplace().trim().isEmpty()) continue;
+                
+                double prix = CinemaDetailReservation.getPrixUnitaire(
+                    this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
+                d.setPrixunitaire(prix);
             }
         }
 

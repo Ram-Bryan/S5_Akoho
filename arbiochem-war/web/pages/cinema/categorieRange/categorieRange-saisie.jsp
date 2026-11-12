@@ -15,6 +15,8 @@
     pi.setTitre("Saisie catégorie de range");
 
     pi.getFormu().getChamp("libelle").setLibelle("Libellé");
+    pi.getFormu().getChamp("prix").setLibelle("Supplément (Ar)");
+pi.getFormu().getChamp("prix").setDefaut("0");
 
     String acte = request.getParameter("acte");
     if (acte != null && acte.equalsIgnoreCase("update")) pi.setTitre("Modification catégorie de range");

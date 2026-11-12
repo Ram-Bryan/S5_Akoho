@@ -116,6 +116,4 @@ rm -f $ORACLE_HOME/dbs/sgadefEE.dbf
 revenir en tant que sysdba et fare SHUTDOWN ABORT puis STARTUP et continuer sur les commandes en haut
 sqlplus / as sysdba
 
-
-
 (si pas encore fait, il faut export les env, si pas encore fait la commande de bashrc)

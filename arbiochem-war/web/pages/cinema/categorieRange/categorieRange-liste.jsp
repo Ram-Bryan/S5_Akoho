@@ -6,7 +6,7 @@
     CinemaCategorieRange o = new CinemaCategorieRange();
     String[] listeCrt  = {"id", "libelle"};
     String[] listeInt  = {};
-    String[] libEntete = {"id", "libelle"};
+    String[] libEntete = {"id", "libelle", "prix"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des catégories de range");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
@@ -15,6 +15,8 @@
 
     pr.getFormu().getChamp("id").setLibelle("Id");
     pr.getFormu().getChamp("libelle").setLibelle("Libellé");
+    pr.getFormu().getChamp("prix").setLibelle("Supplément max");
+
 
     pr.creerObjetPage(libEntete, null);
 
@@ -27,7 +29,7 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/categorieRange/categorieRange-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Libellé"});
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Libellé", "prix"});
 %>
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>

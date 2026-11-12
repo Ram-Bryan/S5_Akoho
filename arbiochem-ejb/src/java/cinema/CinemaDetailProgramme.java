@@ -8,8 +8,7 @@ public class CinemaDetailProgramme extends ClassFille {
     private String idprogramme;
     private String idfilm;
     private int rang;
-    private int etat;
-    private String iduser;
+
 
     public CinemaDetailProgramme() throws Exception {
         this.setNomTable("cinema_detail_programme");
@@ -75,21 +74,4 @@ public class CinemaDetailProgramme extends ClassFille {
         this.rang = rang;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 }

@@ -9,8 +9,6 @@ public class CinemaPlace extends ClassFille {
     private String id;
     private String libelle;
     private String idrange;
-    private int etat;
-    private String iduser;
 
     public CinemaPlace() throws Exception {
         this.setNomTable("cinema_place");
@@ -68,23 +66,6 @@ public class CinemaPlace extends ClassFille {
         this.idrange = idrange;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 
     // ============================================================================
     // Disponibilité d'une place pour un film programmé donné

@@ -8,8 +8,7 @@ public class CinemaRange extends ClassMere {
     private String libelle;
     private String idsalle;
     private String idcategorierange;
-    private int etat;
-    private String iduser;
+
 
     public CinemaRange() throws Exception {
         this.setNomTable("cinema_range");
@@ -75,21 +74,4 @@ public class CinemaRange extends ClassMere {
         this.idcategorierange = idcategorierange;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 }

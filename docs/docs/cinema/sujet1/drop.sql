@@ -14,7 +14,7 @@ DROP TABLE cinema_facture_client       CASCADE CONSTRAINTS;
 DROP TABLE cinema_hist_statut_reserv   CASCADE CONSTRAINTS;
 DROP TABLE cinema_detail_reservation   CASCADE CONSTRAINTS;
 DROP TABLE cinema_reservation          CASCADE CONSTRAINTS;
-DROP TABLE cinema_historique_prix_programme CASCADE CONSTRAINTS;
+DROP TABLE cinema_hist_prix_programme CASCADE CONSTRAINTS;
 DROP TABLE cinema_detail_programme     CASCADE CONSTRAINTS;
 DROP TABLE cinema_programme            CASCADE CONSTRAINTS;
 DROP TABLE cinema_place                CASCADE CONSTRAINTS;

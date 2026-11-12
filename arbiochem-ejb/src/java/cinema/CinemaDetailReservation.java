@@ -9,8 +9,9 @@ public class CinemaDetailReservation extends ClassFille {
     private String id;
     private String idreservation;
     private String idplace;
-    private int etat;
-    private String iduser;
+    private double prixunitaire;
+
+
 
     public CinemaDetailReservation() throws Exception {
         this.setNomTable("cinema_detail_reservation");
@@ -68,23 +69,9 @@ public class CinemaDetailReservation extends ClassFille {
         this.idplace = idplace;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
+    public double getPrixunitaire() { return prixunitaire; }
+public void setPrixunitaire(double prixunitaire) { this.prixunitaire = prixunitaire; }
 
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 
     // ============================================================================
     // Prix unitaire d'une place pour un film programmé à une date donnée

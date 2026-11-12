@@ -4,6 +4,7 @@ public class CinemaPlaceLib extends CinemaPlace {
     private String rangelib;
     private String sallelib;
     private String categorierangelib;
+    private String idsalle;   // ← AJOUT
 
     public CinemaPlaceLib() throws Exception {
         this.setNomTable("cinema_place_lib");
@@ -31,5 +32,13 @@ public class CinemaPlaceLib extends CinemaPlace {
 
     public void setCategorierangelib(String categorierangelib) {
         this.categorierangelib = categorierangelib;
+    }
+
+    public String getIdsalle() {
+        return idsalle;
+    }
+
+    public void setIdsalle(String idsalle) {
+        this.idsalle = idsalle;
     }
 }

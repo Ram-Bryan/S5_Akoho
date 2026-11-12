@@ -12,8 +12,7 @@ public class CinemaFactureClient extends ClassEtat {
     private String numero;
     private String idreservation;
     private Date datefacture;
-    private int etat;
-    private String iduser;
+
 
     public CinemaFactureClient() throws Exception {
         this.setNomTable("cinema_facture_client");
@@ -77,23 +76,6 @@ public class CinemaFactureClient extends ClassEtat {
         this.datefacture = datefacture;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 
     // ============================================================================
     // Numéro de facture : FC<YYYY><seq6> ex: FC2026000001

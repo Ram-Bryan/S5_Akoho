@@ -14,7 +14,9 @@
 
     pc.getChampByName("id").setLibelle("Id");
     pc.getChampByName("libelle").setLibelle("Libellé");
-    pc.setOrdre(new String[]{"id", "libelle"});
+    pc.getChampByName("prix").setLibelle("Supplément (Ar)");
+
+    pc.setOrdre(new String[]{"id", "libelle", "prix"});
 
     String pageRetour = "cinema/categorieRange/categorieRange-liste.jsp";
     String pageModif  = "cinema/categorieRange/categorieRange-saisie.jsp&acte=update";

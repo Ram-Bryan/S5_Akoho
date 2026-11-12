@@ -309,16 +309,16 @@ INSERT INTO cinema_detail_programme (id, idprogramme, idfilm, rang, etat, iduser
 -- ============================================================================
 -- 13. Historique prix programme (10 — ligne initiale)
 -- ============================================================================
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000001', 'CPRG000001', 25000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000002', 'CPRG000002', 28000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000003', 'CPRG000003', 30000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000004', 'CPRG000004', 10000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000005', 'CPRG000005', 12000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000006', 'CPRG000006', 22000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000007', 'CPRG000007', 27000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000008', 'CPRG000008', 15000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000009', 'CPRG000009', 18000, TRUNC(SYSDATE));
-INSERT INTO cinema_historique_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000010', 'CPRG000010', 20000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000001', 'CPRG000001', 25000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000002', 'CPRG000002', 28000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000003', 'CPRG000003', 30000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000004', 'CPRG000004', 10000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000005', 'CPRG000005', 12000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000006', 'CPRG000006', 22000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000007', 'CPRG000007', 27000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000008', 'CPRG000008', 15000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000009', 'CPRG000009', 18000, TRUNC(SYSDATE));
+INSERT INTO cinema_hist_prix_programme (id, idprogramme, prix, datedebut) VALUES ('CHPP000010', 'CPRG000010', 20000, TRUNC(SYSDATE));
 
 COMMIT;
 
@@ -365,9 +365,9 @@ ALTER SEQUENCE SEQ_CINEMA_DETAIL_PROGRAMME INCREMENT BY 10;
 SELECT SEQ_CINEMA_DETAIL_PROGRAMME.NEXTVAL FROM DUAL;
 ALTER SEQUENCE SEQ_CINEMA_DETAIL_PROGRAMME INCREMENT BY 1;
 
-ALTER SEQUENCE SEQ_CINEMA_HIST_PRIX_PROGRAMME INCREMENT BY 10;
-SELECT SEQ_CINEMA_HIST_PRIX_PROGRAMME.NEXTVAL FROM DUAL;
-ALTER SEQUENCE SEQ_CINEMA_HIST_PRIX_PROGRAMME INCREMENT BY 1;
+ALTER SEQUENCE SEQ_CIN_HIST_PRIX_PROG INCREMENT BY 10;
+SELECT SEQ_CIN_HIST_PRIX_PROG.NEXTVAL FROM DUAL;
+ALTER SEQUENCE SEQ_CIN_HIST_PRIX_PROG INCREMENT BY 1;
 
 ALTER SEQUENCE SEQ_CINEMA_CLIENT INCREMENT BY 3;
 SELECT SEQ_CINEMA_CLIENT.NEXTVAL FROM DUAL;
@@ -382,5 +382,8 @@ ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 1;
 --   SEQ_CINEMA_DETAIL_RESERVATION
 --   SEQ_CINEMA_HIST_STATUT_RES
 --   SEQ_CINEMA_FACTURE_CLIENT
+
+
+
 
 COMMIT;

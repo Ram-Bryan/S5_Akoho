@@ -14,8 +14,7 @@ public class CinemaProgramme extends ClassMere {
     private Date datedebut;
     private String heuredebut;
     private double prix;
-    private int etat;
-    private String iduser;
+
 
     public CinemaProgramme() throws Exception {
         this.setNomTable("cinema_programme");
@@ -89,23 +88,6 @@ public class CinemaProgramme extends ClassMere {
         this.prix = prix;
     }
 
-    @Override
-    public int getEtat() {
-        return etat;
-    }
-
-    @Override
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 
     // ============================================================================
     // createObject : insère le programme + ligne de prix initiale dans l'historique
