@@ -18,7 +18,10 @@
     pc.getChampByName("titre").setLibelle("Titre");
     pc.getChampByName("description").setLibelle("Description");
     pc.getChampByName("duree").setLibelle("Durée (min)");
-    pc.setOrdre(new String[]{"id", "titre", "description", "duree"});
+    pc.getChampByName("realisateur").setLibelle("Realisateur");
+    pc.getChampByName("idclassification").setLibelle("Classification");
+
+    pc.setOrdre(new String[]{"id", "titre", "description", "duree", "realisateur", "idclassification"});
 
     String pageRetour = "cinema/film/film-liste.jsp";
     String pageActuel = "cinema/film/film-fiche.jsp";

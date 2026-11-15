@@ -8,6 +8,8 @@ public class CinemaFilm extends ClassMAPTable {
     private String titre;
     private String description;
     private int duree;
+    private String realisateur;
+    private String idclassification;
 
     public CinemaFilm() throws Exception {
         this.setNomTable("cinema_film");
@@ -37,6 +39,17 @@ public class CinemaFilm extends ClassMAPTable {
     @Override
     public String[] getValMotCles() {
         return new String[]{"titre", "description"};
+    }
+
+    public CinemaClassification getClassification(Connection c) throws Exception {
+        try {
+            return (CinemaClassification) new CinemaClassification().getById(this.getIdclassification(), "cinema_classification", c);
+
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+
+        return new CinemaClassification();
     }
 
     public String getId() {
@@ -70,4 +83,21 @@ public class CinemaFilm extends ClassMAPTable {
     public void setDuree(int duree) {
         this.duree = duree;
     }
+
+    public String getRealisateur() {
+        return realisateur;
+    }
+
+    public void setRealisateur(String realisateur) {
+        this.realisateur = realisateur;
+    }
+
+    public String getIdclassification() {
+        return idclassification;
+    }
+
+    public void setIdclassification(String idclassification) {
+        this.idclassification = idclassification;
+    }
+
 }

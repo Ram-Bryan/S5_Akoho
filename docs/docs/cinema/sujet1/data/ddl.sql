@@ -24,6 +24,24 @@ END;
 /
 
 -- ============================================================================
+-- . cinema_classification  (M:N)
+-- ============================================================================
+CREATE TABLE cinema_classification (
+    id          VARCHAR2(50) PRIMARY KEY,
+    limite      NUMBER(2) NOT NULL,
+    libelle     VARCHAR2(50) NOT NULL
+);
+
+CREATE SEQUENCE SEQ_CINEMA_CLASSIFICATION START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE OR REPLACE FUNCTION getseq_cinema_classification RETURN NUMBER IS
+  v_seq NUMBER;
+BEGIN
+  SELECT SEQ_CINEMA_CLASSIFICATION.NEXTVAL INTO v_seq FROM DUAL;
+  RETURN v_seq;
+END;
+/
+
+-- ============================================================================
 -- 2. cinema_film
 -- ============================================================================
 CREATE TABLE cinema_film (
@@ -31,7 +49,10 @@ CREATE TABLE cinema_film (
     titre       VARCHAR2(255) NOT NULL,
     description VARCHAR2(2000),
     duree       NUMBER(5)     NOT NULL,
-    CONSTRAINT CK_CINEMA_FILM_DUREE CHECK (duree > 0)
+    realisateur VARCHAR2(255) NOT NULL,
+    idclassification VARCHAR2(50) ,
+    CONSTRAINT CK_CINEMA_FILM_DUREE CHECK (duree > 0),
+    CONSTRAINT CCF_CLASSIFICATION_FK FOREIGN KEY (idclassification) REFERENCES cinema_classification(id)
 );
 
 CREATE SEQUENCE SEQ_CINEMA_FILM START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -454,5 +475,18 @@ JOIN cinema_place pl    ON pl.id = dr.idplace
 JOIN cinema_range r     ON r.id  = pl.idrange
 JOIN cinema_salle s     ON s.id  = r.idsalle;
 
+-- Si on veut afficher le libelle et non l'id
+-- CREATE OR REPLACE VIEW cinema_film_lib AS
+-- SELECT f.id,
+--        f.titre,
+--        f.description,
+--        f.duree,
+--        f.realisateur,
+--        f.idclassification,
+--        c.libelle AS classificationlib  -- Le libellé de la classification
+-- FROM cinema_film f
+-- LEFT JOIN cinema_classification c ON c.id = f.idclassification;
+
+-- COMMIT;
 
 COMMIT;

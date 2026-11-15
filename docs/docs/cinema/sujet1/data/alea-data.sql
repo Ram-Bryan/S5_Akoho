@@ -11,6 +11,12 @@ INSERT INTO cinema_categorie (id, libelle) VALUES ('CCAT000003', 'Animation');
 INSERT INTO cinema_categorie (id, libelle) VALUES ('CCAT000004', 'Tous publics');
 INSERT INTO cinema_categorie (id, libelle) VALUES ('CCAT000005', 'Normal');
 
+INSERT INTO cinema_classification (id, limite, libelle) VALUES ('CCLF000001', 99, 'Tous');
+INSERT INTO cinema_classification (id, limite, libelle) VALUES ('CCLF000002', 10, '-10');
+INSERT INTO cinema_classification (id, limite, libelle) VALUES ('CCLF000003',12, '-12');
+INSERT INTO cinema_classification (id, limite, libelle) VALUES ('CCLF000004',16, '-16');
+INSERT INTO cinema_classification (id, limite, libelle) VALUES ('CCLF000005',18, '-18');
+
 -- ============================================================================
 -- 2. Catégories de range (3) + prix (dénormalisé)
 -- ============================================================================
@@ -127,9 +133,9 @@ INSERT INTO cinema_place (id, libelle, idrange, etat, iduser) VALUES ('CPLA00006
 -- ============================================================================
 -- 8. Films (3)
 -- ============================================================================
-INSERT INTO cinema_film (id, titre, description, duree) VALUES ('CFIL000001', 'Les Gardiens du Baobab', 'Réalisateur: Hery Rakotomalala | Aventure | Tous publics', 115);
-INSERT INTO cinema_film (id, titre, description, duree) VALUES ('CFIL000002', 'Nuit sur Analamanga', 'Réalisateur: Fanja Andriamanana | Thriller | -12', 105);
-INSERT INTO cinema_film (id, titre, description, duree) VALUES ('CFIL000003', 'Le Petit Lémurien', 'Réalisateur: Tojo Randrianarisoa | Animation | Tous publics', 90);
+INSERT INTO cinema_film (id, titre, description, duree, realisateur, idclassification) VALUES ('CFIL000001', 'Les Gardiens du Baobab', 'Realisateur: Hery Rakotomalala | Aventure | Tous publics', 115, 'Hery Rakotomalala', 'CCLF000001');
+INSERT INTO cinema_film (id, titre, description, duree, realisateur, idclassification) VALUES ('CFIL000002', 'Nuit sur Analamanga', 'Realisateur: Fanja Andriamanana | Thriller | -12', 105, 'Fanja Andriamanana', 'CCLF000003');
+INSERT INTO cinema_film (id, titre, description, duree, realisateur, idclassification) VALUES ('CFIL000003', 'Le Petit Lémurien', 'Realisateur: Tojo Randrianarisoa | Animation | Tous publics', 90, 'Tojo Randrianarisoa', 'CCLF000001');
 
 -- ============================================================================
 -- 9. Catégories de film (M:N)
@@ -259,6 +265,10 @@ ALTER SEQUENCE SEQ_CINEMA_CLIENT INCREMENT BY 1;
 ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 4;
 SELECT SEQ_CINEMA_STATUT_RESERVATION.NEXTVAL FROM DUAL;
 ALTER SEQUENCE SEQ_CINEMA_STATUT_RESERVATION INCREMENT BY 1;
+
+ALTER SEQUENCE SEQ_CINEMA_CLASSIFICATION INCREMENT BY 4;
+SELECT SEQ_CINEMA_CLASSIFICATION.NEXTVAL FROM DUAL;
+ALTER SEQUENCE SEQ_CINEMA_CLASSIFICATION INCREMENT BY 1;
 
 ALTER SEQUENCE SEQ_CINEMA_PROGRAMME INCREMENT BY 19;
 SELECT SEQ_CINEMA_PROGRAMME.NEXTVAL FROM DUAL;

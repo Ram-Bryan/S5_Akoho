@@ -4,9 +4,9 @@
 
 <% try {
     CinemaFilm o = new CinemaFilm();
-    String[] listeCrt  = {"id", "titre", "duree"};
+    String[] listeCrt  = {"id", "titre", "duree", "realisateur", "idclassification"};
     String[] listeInt  = {"duree"};
-    String[] libEntete = {"id", "titre", "duree"};
+    String[] libEntete = {"id", "titre", "duree", "realisateur", "idclassification"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des films");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
@@ -15,6 +15,9 @@
 
     pr.getFormu().getChamp("id").setLibelle("Id");
     pr.getFormu().getChamp("titre").setLibelle("Titre");
+    pr.getFormu().getChamp("realisateur").setLibelle("Realisateur");
+    pr.getFormu().getChamp("idclassification").setLibelle("Classification");
+
     pr.getFormu().getChamp("duree1").setLibelle("Durée min");
     pr.getFormu().getChamp("duree2").setLibelle("Durée max");
 
@@ -29,8 +32,9 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/film/film-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Titre", "Durée (min)"});
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Titre", "Durée (min)", "Realisateur"});
 %>
+
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>
     <section class="content">

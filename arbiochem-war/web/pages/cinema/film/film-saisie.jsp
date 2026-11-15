@@ -17,6 +17,9 @@
     pi.getFormu().getChamp("titre").setLibelle("Titre");
     pi.getFormu().getChamp("description").setLibelle("Description");
     pi.getFormu().getChamp("duree").setLibelle("Durée (minutes)");
+    pi.getFormu().getChamp("realisateur").setLibelle("Realisateur");
+    pi.getFormu().getChamp("idclassification").setLibelle("Classification");
+
 
     String acte = request.getParameter("acte");
     if (acte != null && acte.equalsIgnoreCase("update")) pi.setTitre("Modification film");
