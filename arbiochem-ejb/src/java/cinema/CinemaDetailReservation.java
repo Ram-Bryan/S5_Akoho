@@ -121,15 +121,15 @@ public class CinemaDetailReservation extends ClassFille {
         double prixTotal     = prixProgramme + supplement;
 
 
-        if (prog.getHeuredebut() != null) {
-            String[] p = prog.getHeuredebut().split(":");
-            if (p.length == 2) {
-                int heure = Integer.parseInt(p[0]);
-                if (heure >= 20 || heure == 0) {
-                    prixTotal = prixTotal / 2;
-                }
-            }
-        }
+        // if (prog.getHeuredebut() != null) {
+        //     String[] p = prog.getHeuredebut().split(":");
+        //     if (p.length == 2) {
+        //         int heure = Integer.parseInt(p[0]);
+        //         if (heure >= 20 || heure == 0) {
+        //             prixTotal = prixTotal / 2;
+        //         }
+        //     }
+        // }
 
         // Bonus : 19:30 compte-t-il comme "20h" ?
         // Si tu veux que 19:30 soit aussi réduit (séance du soir), modifie la condition :
