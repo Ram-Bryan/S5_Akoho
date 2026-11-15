@@ -112,53 +112,31 @@ public class CinemaReservation extends ClassMere {
     // ============================================================================
     @Override
     public ClassMAPTable createObject(String refUser, Connection c) throws Exception {
-        // 1. Statut par défaut
         if (this.getIdstatutreservation() == null || this.getIdstatutreservation().trim().isEmpty()) {
             this.setIdstatutreservation(ConstanteCinema.STATUTRESERVE);
         }
 
-        // 2. Disponibilité des places
         ClassFille[] filles = this.getFille();
         if (filles != null) {
             for (ClassFille f : filles) {
                 CinemaDetailReservation d = (CinemaDetailReservation) f;
                 if (d.getIdplace() == null || d.getIdplace().trim().isEmpty())
                     continue;
+
+                // Vérification disponibilité
                 if (!CinemaPlace.estDisponible(d.getIdplace(), this.getIddetailprogramme(), this.getId(), c)) {
                     throw new Exception("La place " + d.getIdplace() + " n'est plus disponible pour ce film programmé");
                 }
-            }
-        }
 
-        if (filles != null) {
-            for (ClassFille f : filles) {
-                CinemaDetailReservation d = (CinemaDetailReservation) f;
-                if (d.getIdplace() == null || d.getIdplace().trim().isEmpty())
-                    continue;
-
+                // Le prix est calculé (avec réduction) et figé
                 double prix = CinemaDetailReservation.getPrixUnitaire(
                         this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
-                
-                CinemaDetailProgramme detProg = new CinemaDetailProgramme();
-                detProg = (CinemaDetailProgramme) detProg.getById(this.getIdDetailProgramme(), "cinema_detail_programme", c);
-                
-                CinemaProgramme prog = new CinemaProgramme();
-                prog = (CinemaProgramme) prog.getById(detProg.getIdprogramme(), "cinema_programme", c);
-
-                String[] p = prog.getHeuredebut().split(":");
-
-                if (p[0].equalsIgnoreCase("20") ||p[0].equalsIgnoreCase("21") || p[0].equalsIgnoreCase("22") || p[0].equalsIgnoreCase("23") || p[0].equalsIgnoreCase("00")) {
-                    prix = prix/2;
-                }
-
                 d.setPrixunitaire(prix);
             }
         }
 
-        // 3. Insert mère + filles
         ClassMAPTable result = super.createObject(refUser, c);
 
-        // 4. Journal statut
         CinemaHistoriqueStatutReservation hist = new CinemaHistoriqueStatutReservation();
         hist.setIdreservation(this.getId());
         hist.setIdstatutreservation(this.getIdstatutreservation());
@@ -276,7 +254,7 @@ public class CinemaReservation extends ClassMere {
     // ============================================================================
     // changeState : gère l'action "payer" (valider le paiement)
     // ============================================================================
-        // ============================================================================
+    // ============================================================================
     // changeState : gère l'action "payer"
     // ============================================================================
     @Override

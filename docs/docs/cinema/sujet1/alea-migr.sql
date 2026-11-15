@@ -3,7 +3,6 @@ ALTER TABLE cinema_categorie_range ADD (
     CONSTRAINT CK_CCRG_PRIX CHECK (prix >= 0)
 );
 
-
 UPDATE cinema_categorie_range c
 SET c.prix = NVL((
     SELECT MAX(ch.prixsupplement) KEEP (DENSE_RANK FIRST ORDER BY ch.datedebut DESC)

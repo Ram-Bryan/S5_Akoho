@@ -89,7 +89,9 @@ END;
 -- ============================================================================
 CREATE TABLE cinema_categorie_range (
     id          VARCHAR2(50)  PRIMARY KEY,
-    libelle     VARCHAR2(255) NOT NULL
+    libelle     VARCHAR2(255) NOT NULL,
+    prix NUMBER(15,2) DEFAULT 0 NOT NULL,
+    CONSTRAINT CK_CCRG_PRIX CHECK (prix >= 0)
 );
 
 CREATE SEQUENCE SEQ_CINEMA_CATEGORIE_RANGE START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -331,6 +333,8 @@ CREATE TABLE cinema_detail_reservation (
     idplace        VARCHAR2(50)  NOT NULL,
     etat           NUMBER(2)     DEFAULT 1 NOT NULL,
     iduser         VARCHAR2(50)  DEFAULT '0',
+    prixunitaire NUMBER(15,2) DEFAULT 0 NOT NULL,
+    CONSTRAINT CK_CDTR_PRIX CHECK (prixunitaire >= 0),
     CONSTRAINT CDTR_RESERVATION_FK FOREIGN KEY (idreservation)
         REFERENCES cinema_reservation(id),
     CONSTRAINT CDTR_PLACE_FK       FOREIGN KEY (idplace)
@@ -434,5 +438,21 @@ SELECT d.id,
 FROM cinema_detail_programme d
 JOIN cinema_film f ON f.id = d.idfilm
 JOIN cinema_programme p ON p.id = d.idprogramme;
+
+CREATE OR REPLACE VIEW cinema_detail_reservation_cpl AS
+SELECT dr.id,
+       dr.idreservation,
+       dr.idplace,
+       pl.libelle      AS placelib,
+       r.libelle       AS rangelib,
+       s.libelle       AS sallelib,
+       dr.prixunitaire AS prix,
+       dr.etat,
+       dr.iduser
+FROM cinema_detail_reservation dr
+JOIN cinema_place pl    ON pl.id = dr.idplace
+JOIN cinema_range r     ON r.id  = pl.idrange
+JOIN cinema_salle s     ON s.id  = r.idsalle;
+
 
 COMMIT;
