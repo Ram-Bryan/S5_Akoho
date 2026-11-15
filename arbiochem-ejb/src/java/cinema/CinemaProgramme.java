@@ -96,7 +96,7 @@ public class CinemaProgramme extends ClassMere {
     public ClassMAPTable createObject(String refUser, Connection c) throws Exception {
         ClassMAPTable result = super.createObject(refUser, c);
 
-        if (this.getPrix() > 0) {
+        if (this.getPrix() >= 0) {
             CinemaHistoriquePrixProgramme hist = new CinemaHistoriquePrixProgramme();
             hist.setIdprogramme(this.getId());
             hist.setPrix(this.getPrix());
