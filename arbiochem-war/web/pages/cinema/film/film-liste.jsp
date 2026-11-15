@@ -1,23 +1,32 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ page import="affichage.PageRecherche" %>
-<%@ page import="cinema.CinemaFilm" %>
+<%@ page import="affichage.Liste" %>
+<%@ page import="cinema.CinemaFilmLib" %>
+<%@ page import="cinema.CinemaClassification" %>
 
 <% try {
-    CinemaFilm o = new CinemaFilm();
+    // 1. On utilise la classe Lib
+    CinemaFilmLib o = new CinemaFilmLib();
+    
+    // 2. On cherche par idclassification, mais on affiche classificationlib
     String[] listeCrt  = {"id", "titre", "duree", "realisateur", "idclassification"};
     String[] listeInt  = {"duree"};
-    String[] libEntete = {"id", "titre", "duree", "realisateur", "idclassification"};
+    String[] libEntete = {"id", "titre", "duree", "realisateur", "classificationlib"}; 
+    
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des films");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
     pr.setLien((String) session.getValue("lien"));
     pr.setApres("cinema/film/film-liste.jsp");
 
+    // 3. On transforme l'ID classification en Dropdown
+    Liste listeClassif = new Liste("idclassification", new CinemaClassification(), "libelle", "id");
+    pr.getFormu().changerEnChamp(new Liste[]{ listeClassif });
+
     pr.getFormu().getChamp("id").setLibelle("Id");
     pr.getFormu().getChamp("titre").setLibelle("Titre");
     pr.getFormu().getChamp("realisateur").setLibelle("Realisateur");
     pr.getFormu().getChamp("idclassification").setLibelle("Classification");
-
     pr.getFormu().getChamp("duree1").setLibelle("Durée min");
     pr.getFormu().getChamp("duree2").setLibelle("Durée max");
 
@@ -32,7 +41,9 @@
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/film/film-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Titre", "Durée (min)", "Realisateur"});
+    
+    // 4. Les entêtes affichés
+    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Titre", "Durée (min)", "Realisateur", "Classification"});
 %>
 
 <div class="content-wrapper">

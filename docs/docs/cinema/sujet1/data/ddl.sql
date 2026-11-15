@@ -476,16 +476,16 @@ JOIN cinema_range r     ON r.id  = pl.idrange
 JOIN cinema_salle s     ON s.id  = r.idsalle;
 
 -- Si on veut afficher le libelle et non l'id
--- CREATE OR REPLACE VIEW cinema_film_lib AS
--- SELECT f.id,
---        f.titre,
---        f.description,
---        f.duree,
---        f.realisateur,
---        f.idclassification,
---        c.libelle AS classificationlib  -- Le libellé de la classification
--- FROM cinema_film f
--- LEFT JOIN cinema_classification c ON c.id = f.idclassification;
+CREATE OR REPLACE VIEW cinema_film_lib AS
+SELECT f.id,
+       f.titre,
+       f.description,
+       f.duree,
+       f.realisateur,
+       f.idclassification,
+       c.libelle AS classificationlib  -- Le libellé de la classification
+FROM cinema_film f
+LEFT JOIN cinema_classification c ON c.id = f.idclassification;
 
 -- COMMIT;
 

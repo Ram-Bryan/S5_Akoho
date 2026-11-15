@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ page import="user.UserEJB" %>
 <%@ page import="affichage.PageConsulte" %>
-<%@ page import="cinema.CinemaFilm" %>
+<%@ page import="cinema.CinemaFilmLib" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 
@@ -9,7 +9,7 @@
     UserEJB u = (user.UserEJB) session.getValue("u");
     String lien = (String) session.getValue("lien");
 
-    CinemaFilm o = new CinemaFilm();
+    CinemaFilmLib o = new CinemaFilmLib(); // <-- Utilise la classe Lib
     PageConsulte pc = new PageConsulte(o, request, u);
     pc.setTitre("Fiche film");
     String id = pc.getBase().getTuppleID();
@@ -19,9 +19,12 @@
     pc.getChampByName("description").setLibelle("Description");
     pc.getChampByName("duree").setLibelle("Durée (min)");
     pc.getChampByName("realisateur").setLibelle("Realisateur");
-    pc.getChampByName("idclassification").setLibelle("Classification");
+    
+    // On affiche le libellé de la classification
+    pc.getChampByName("classificationlib").setLibelle("Classification");
+    pc.getChampByName("idclassification").setVisible(false); // On cache l'ID
 
-    pc.setOrdre(new String[]{"id", "titre", "description", "duree", "realisateur", "idclassification"});
+    pc.setOrdre(new String[]{"id", "titre", "description", "duree", "realisateur", "classificationlib"});
 
     String pageRetour = "cinema/film/film-liste.jsp";
     String pageActuel = "cinema/film/film-fiche.jsp";

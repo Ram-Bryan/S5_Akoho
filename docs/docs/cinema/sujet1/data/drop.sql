@@ -8,6 +8,7 @@
 DROP VIEW cinema_programme_lib;
 DROP VIEW cinema_detail_programme_lib;
 DROP VIEW cinema_place_lib;
+DROP VIEW cinema_film_lib;
 
 -- 2. Tables (CASCADE CONSTRAINTS = l'ordre des FK n'importe pas)
 DROP TABLE cinema_facture_client       CASCADE CONSTRAINTS;
