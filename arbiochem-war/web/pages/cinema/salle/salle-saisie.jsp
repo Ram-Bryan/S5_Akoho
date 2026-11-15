@@ -24,6 +24,15 @@
 %>
 <div class="content-wrapper">
     <h1><%=pi.getTitre()%></h1>
+
+    <div class="row m-b-10">
+    <div class="col-md-12 text-right">
+        <a href="<%= session.getValue("lien") %>?but=cinema/salle/ui/salle-saisie-visuelle.jsp" class="btn btn-info">
+            <i class="fa fa-th"></i> Mode Visuel
+        </a>
+    </div>
+</div>
+    
     <form action="<%=pi.getLien()%>?but=apresTarif.jsp" method="post" name="<%=nomTable%>" id="<%=nomTable%>">
         <% out.println(pi.getFormu().getHtmlInsert()); %>
         <input name="acte"     type="hidden" value="insert">

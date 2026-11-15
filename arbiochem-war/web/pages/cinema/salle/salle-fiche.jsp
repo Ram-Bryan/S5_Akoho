@@ -25,6 +25,8 @@
 
     Map<String, String> map = new HashMap<>();
     map.put("inc/salle-ranges", "");
+    map.put("inc/salle-plan", ""); // NOUVEAU : ajout du plan
+    
     String tab = request.getParameter("tab");
     if (tab == null) tab = "inc/salle-ranges";
     map.put(tab, "active");
@@ -57,6 +59,10 @@
                 <ul class="nav nav-tabs">
                     <li class="<%=map.get("inc/salle-ranges")%>">
                         <a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=inc/salle-ranges">Ranges</a>
+                    </li>
+                    <!-- NOUVEAU : Lien vers le plan visuel -->
+                    <li class="<%=map.get("inc/salle-plan")%>">
+                        <a href="<%= lien %>?but=<%= pageActuel %>&id=<%= id %>&tab=inc/salle-plan">Plan Visuel</a>
                     </li>
                 </ul>
                 <div class="tab-content">

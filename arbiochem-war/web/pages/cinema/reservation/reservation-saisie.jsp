@@ -83,6 +83,13 @@
 %>
 <div class="content-wrapper">
     <h1><%=pi.getTitre()%></h1>
+    <div class="row m-b-10">
+    <div class="col-md-12 text-right">
+        <a href="<%=pi.getLien()%>?but=cinema/reservation/ui/reservation-saisie-visuelle.jsp" class="btn btn-info btn-flat">
+            <i class="fa fa-th"></i> Mode Visuel
+        </a>
+    </div>
+</div>
     <form id="formId" class='container' action="<%=pi.getLien()%>?but=apresMultiple.jsp" method="post">
         <%
             out.println(pi.getFormu().getHtmlInsert());
