@@ -60,3 +60,66 @@ getChampByName() = Prend le champ. Pour PAgeConsulte et non PageRecherche (getCh
 pc.setOrdre(new String[]{"id", "titre", "description", "duree", "realisateur"});
 
 donne l'ordre de l'affichage des infos.
+
+## GetAll
+Sans filtre:
+```java
+CinemaFilm[] tousLesFilms = (CinemaFilm[]) CGenUtil.rechercher(
+    new CinemaFilm(), null, null, c, ""
+);
+```
+
+Avec filtre:
+```java
+CinemaFilm[] filmsFiltres = (CinemaFilm[]) CGenUtil.rechercher(
+    new CinemaFilm(), null, null, c, " AND titre LIKE '%Baobab%' "
+);
+```
+
+### Avec date filtre:
+```java
+
+c = new UtilDB().GetConn();
+
+    // Exemple : récupérer les réservations du mois de novembre 2026
+    Date debut = Date.valueOf("2026-11-01");
+    Date fin   = Date.valueOf("2026-11-30");
+
+    String where = " AND datereservation BETWEEN "
+                 + "TO_DATE('" + debut + "', 'YYYY-MM-DD') AND "
+                 + "TO_DATE('" + fin   + "', 'YYYY-MM-DD') ";
+
+    CinemaReservation[] reservations = (CinemaReservation[]) CGenUtil.rechercher(
+        new CinemaReservation(), null, null, c, where
+    );
+
+
+ou String where = " AND TRUNC(datereservation) = TRUNC(SYSDATE) ";
+
+ou String where = " AND TRUNC(datereservation) > TO_DATE('2026-11-01', 'YYYY-MM-DD') ";
+ou java.sql.Date limite = java.sql.Date.valueOf("2026-11-01");
+String where = " AND TRUNC(datereservation) > TO_DATE('" + limite + "', 'YYYY-MM-DD') ";
+
+```
+
+## Faire une somme:
+AdminGen.calculSommeDouble(Object[] liste, String nomChamp)
+```java
+double total = AdminGen.calculSommeDouble(reservations, "montanttotal");
+```
+affiche avec:
+```java
+<p>Total des réservations de novembre : 
+   <strong><%= utilitaire.Utilitaire.formaterAr(total) %> Ar</strong>
+</p>
+```
+
+## Oracle voir la structure d'une table:
+```sql
+
+SELECT column_name, data_type, data_length, nullable
+FROM user_tab_columns
+WHERE table_name = 'CINEMA_RESERVATION'
+ORDER BY column_id;
+
+```
