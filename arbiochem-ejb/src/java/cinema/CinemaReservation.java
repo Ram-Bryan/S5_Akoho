@@ -277,21 +277,73 @@ public class CinemaReservation extends ClassMere {
     // creerFacture : crée la facture pour la réservation courante
     // (appelée uniquement après passage au statut "paye")
     // ============================================================================
+    // ============================================================================
+    // creerFacture : Crée la facture (mère + filles) et le paiement associé.
+    // Appelée uniquement après le passage au statut "paye".
+    // ============================================================================
     public void creerFacture(String refUser, java.sql.Connection c) throws Exception {
-        // Vérifier qu'il n'y a pas déjà une facture (sécurité)
-        CinemaFactureClient crit = new CinemaFactureClient();
-        String where = " AND idreservation = '" + this.getId() + "' ";
-        CinemaFactureClient[] existing = (CinemaFactureClient[]) bean.CGenUtil.rechercher(crit, null, null, c, where);
+        // 1. Vérifier s'il y a déjà une facture pour cette réservation (sécurité)
+        FactureClient crit = new FactureClient();
+        String where = " AND IDRESERVATIONCINEMA = '" + this.getId() + "' ";
+        FactureClient[] existing = (FactureClient[]) CGenUtil.rechercher(crit, null, null, c, where);
         if (existing != null && existing.length > 0) {
             throw new Exception("Une facture existe déjà pour cette réservation.");
         }
 
-        CinemaFactureClient facture = new CinemaFactureClient();
-        facture.setIdreservation(this.getId());
-        facture.setNumero(CinemaFactureClient.genererNumero(c));
-        facture.setDatefacture(utilitaire.Utilitaire.dateDuJourSql());
-        facture.setIduser(refUser != null ? refUser : "0");
-        facture.setEtat(1);
+        // 2. Créer l'en-tête de la facture (Mère)
+        FactureClient facture = new FactureClient();
+        facture.setIdreservationcinema(this.getId());
+        facture.setIdclient(this.getIdclient());
+        facture.setDaty(utilitaire.Utilitaire.dateDuJourSql());
+        facture.setDesignation("Facture Cinéma - Réservation " + this.getId());
+        facture.setEtat(11); // 11 = Validé (ou 1 si tu veux brouillon)
+        facture.setTva(0); // Pas de TVA pour le cinéma
+
+        // 3. Récupérer les détails de la réservation (les places)
+        CinemaDetailReservation critDet = new CinemaDetailReservation();
+        String whereDet = " AND idreservation = '" + this.getId() + "' AND etat <> 0 ";
+        CinemaDetailReservation[] details = (CinemaDetailReservation[]) CGenUtil.rechercher(critDet, null, null, c,
+                whereDet);
+
+        if (details == null || details.length == 0) {
+            throw new Exception("Impossible de créer la facture : aucune place trouvée pour cette réservation.");
+        }
+
+        // 4. Préparer les lignes de détails (Filles)
+        FactureClientDetails[] factureDetails = new FactureClientDetails[details.length];
+        double totalFacture = 0;
+
+        for (int i = 0; i < details.length; i++) {
+            factureDetails[i] = new FactureClientDetails();
+            factureDetails[i].setIddetailreservationcinema(details[i].getId());
+            factureDetails[i].setQte(1); // On facture 1 place à la fois
+            factureDetails[i].setPu(details[i].getPrixunitaire()); // Prix figé au moment de la résa
+            factureDetails[i].setTva(0);
+            factureDetails[i].setRemises(0);
+            // On peut laisser idproduit, idacte, compte à NULL (ils sont nullables)
+
+            totalFacture += details[i].getPrixunitaire();
+        }
+
+        // 5. Lier les filles à la mère
+        facture.setFille(factureDetails);
+
+        // 6. Insérer la mère + les filles en une seule transaction
+        // (grâce à ClassMere, super.createObject s'occupe d'insérer les filles
+        // automatiquement)
         facture.createObject(refUser, c);
+
+        // 7. Créer le paiement
+        CinemaPaiement paiement = new CinemaPaiement();
+        paiement.setIdfacture(facture.getId());
+        paiement.setDaty(utilitaire.Utilitaire.dateDuJourSql());
+        paiement.setMontant(totalFacture);
+
+        // TODO: Passe le mode de paiement en paramètre si tu as un dropdown dans l'UI
+        // Si tu n'as pas encore d'UI de choix, tu peux mettre une valeur par défaut
+        // paiement.setIdmodepaiement(request.getParameter("idmodepaiement"));
+
+        paiement.setIduser(refUser != null ? refUser : "0");
+        paiement.createObject(refUser, c);
     }
 }
