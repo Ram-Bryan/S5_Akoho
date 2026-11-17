@@ -42,9 +42,12 @@
     pi.setTitre("Saisie d'une réservation");
 
     // Mère — dropdowns
-    Liste listeClient = new Liste("idclient", new CinemaClient(), "nom", "id");
     Liste listeDetailProg = new Liste("iddetailprogramme", new CinemaDetailProgrammeLib(), "programmefilm", "id");
-    pi.getFormu().changerEnChamp(new Liste[]{ listeClient, listeDetailProg });
+    pi.getFormu().changerEnChamp(new Liste[]{ listeDetailProg });
+    
+    pi.getFormu().getChamp("idclient").setPageAppelComplete("client.ClientLib","id","CLIENT_ACTIF");
+
+
 
     pi.getFormu().getChamp("idclient").setLibelle("Client");
     pi.getFormu().getChamp("iddetailprogramme").setLibelle("Film programmé");

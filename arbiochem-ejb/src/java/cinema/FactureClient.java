@@ -22,7 +22,7 @@ public class FactureClient extends ClassMere {
     @Override
     public void construirePK(Connection c) throws Exception {
         // Remplacer "getseqFactureClient" par le vrai nom de séquence Akoho si différent
-        this.preparePk("FC", "SEQFACTURECLIENT"); 
+        this.preparePk("FC", "GET_SEQ_FACTURECLIENT"); 
         this.setId(makePK(c));
     }
 

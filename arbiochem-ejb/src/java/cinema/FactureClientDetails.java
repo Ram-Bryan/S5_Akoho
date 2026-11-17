@@ -21,7 +21,7 @@ public class FactureClientDetails extends ClassFille {
     @Override
     public void construirePK(Connection c) throws Exception {
         // Remplacer "getseqFactureClientDetails" par le vrai nom de séquence Akoho
-        this.preparePk("FCD", "SEQFACTURECLIENTDETAILS"); 
+        this.preparePk("FCD", "GET_SEQ_FACTURECLIENTDETAILS"); 
         this.setId(makePK(c));
     }
 

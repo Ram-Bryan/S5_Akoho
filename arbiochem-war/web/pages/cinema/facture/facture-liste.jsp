@@ -1,12 +1,12 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ page import="affichage.PageRecherche" %>
-<%@ page import="cinema.CinemaFactureClient" %>
+<%@ page import="cinema.FactureClient" %>
 
 <% try {
-    CinemaFactureClient o = new CinemaFactureClient();
-    String[] listeCrt  = {"id", "numero", "idreservation", "datefacture"};
-    String[] listeInt  = {"datefacture"};
-    String[] libEntete = {"id", "numero", "idreservation", "datefacture", "etat"};
+    FactureClient o = new FactureClient();
+    String[] listeCrt  = {"id", "idclient", "idreservationcinema", "daty"};
+    String[] listeInt  = {"daty"};
+    String[] libEntete = {"id", "idclient", "idreservationcinema", "daty", "etat"};
     PageRecherche pr = new PageRecherche(o, request, listeCrt, listeInt, 4, libEntete, libEntete.length);
     pr.setTitre("Liste des factures");
     pr.setUtilisateur((user.UserEJB) session.getValue("u"));
@@ -14,23 +14,17 @@
     pr.setApres("cinema/facture/facture-liste.jsp");
 
     pr.getFormu().getChamp("id").setLibelle("Id");
-    pr.getFormu().getChamp("numero").setLibelle("Numero");
-    pr.getFormu().getChamp("idreservation").setLibelle("Reservation");
-    pr.getFormu().getChamp("datefacture1").setLibelle("Date min");
-    pr.getFormu().getChamp("datefacture2").setLibelle("Date max");
+    pr.getFormu().getChamp("idclient").setLibelle("Client");
+    pr.getFormu().getChamp("idreservationcinema").setLibelle("Réservation");
+    pr.getFormu().getChamp("daty1").setLibelle("Date min");
+    pr.getFormu().getChamp("daty2").setLibelle("Date max");
 
     pr.creerObjetPage(libEntete, null);
-
-    pr.getFormu().setAnotherButton(
-        "<a class=\"btn-secondary btn-bg-white btn btn-small\" " +
-        "href=\"" + pr.getLien() + "?but=cinema/facture/facture-saisie.jsp\">" +
-        "<i class='material-symbols-rounded'>add</i> Saisie</a>"
-    );
 
     pr.getTableau().setLien(new String[]{ pr.getLien() + "?but=cinema/facture/facture-fiche.jsp" });
     pr.getTableau().setColonneLien(new String[]{"id"});
     pr.getTableau().setAttLien(new String[]{"id"});
-    pr.getTableau().setLibelleAffiche(new String[]{"Id", "Numero", "Reservation", "Date", "Etat"});
+    pr.getTableau().setLibelleAffiche(new String[]{"Numéro", "Client", "Réservation", "Date", "État"});
 %>
 <div class="content-wrapper">
     <section class="content-header"><h1><%= pr.getTitre() %></h1></section>

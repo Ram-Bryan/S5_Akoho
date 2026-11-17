@@ -301,7 +301,8 @@ public class CinemaReservation extends ClassMere {
 
         // 3. Récupérer les détails de la réservation (les places)
         CinemaDetailReservation critDet = new CinemaDetailReservation();
-        String whereDet = " AND idreservation = '" + this.getId() + "' AND etat <> 0 ";
+        String whereDet = " AND idreservation = '" + this.getId() + "' ";
+
         CinemaDetailReservation[] details = (CinemaDetailReservation[]) CGenUtil.rechercher(critDet, null, null, c,
                 whereDet);
 
