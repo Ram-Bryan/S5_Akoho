@@ -16,16 +16,18 @@ ALTER TABLE FACTURECLIENT DROP CONSTRAINT FK_FACTURE_RESERV_CINEMA;
 ALTER TABLE FACTURECLIENT DROP COLUMN IDRESERVATIONCINEMA;
 
 -- 4. Annulation FK CLIENT
--- (Attention: On remet la taille à 50. Si tu as des idclient > 50 caractères, cela plantera. 
---  Dans ce cas, supprime cette ligne MODIFY ou garde 255)
 ALTER TABLE cinema_reservation DROP CONSTRAINT CRES_CLIENT_AKOHO_FK;
+
+-- On remet le type à 50 (ATTENTION: si des ID > 50 existent, commente cette ligne)
 ALTER TABLE cinema_reservation MODIFY idclient VARCHAR2(50);
+
+-- On s'assure que le client fictif existe dans l'ancienne table pour éviter l'erreur FK
+INSERT INTO cinema_client (id, nom) 
+SELECT 'CINEMA_INCONNU', 'Client Inconnu (UNDO)' FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM cinema_client WHERE id = 'CINEMA_INCONNU');
 
 -- On recrée l'ancienne FK vers cinema_client
 ALTER TABLE cinema_reservation ADD CONSTRAINT CRES_CLIENT_FK 
     FOREIGN KEY (idclient) REFERENCES cinema_client(id);
-
--- (Optionnel) Nettoyer le client fictif si tu veux
--- DELETE FROM CLIENT WHERE ID = 'CINEMA_INCONNU';
 
 COMMIT;
