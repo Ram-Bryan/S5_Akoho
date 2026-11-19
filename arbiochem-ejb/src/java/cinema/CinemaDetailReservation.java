@@ -118,21 +118,21 @@ public class CinemaDetailReservation extends ClassFille {
         double prixProgramme = CinemaHistoriquePrixProgramme.getPrixEnVigueur(idprogramme, dateRef, c);
         double supplement = CinemaHistoriquePrixCategorieRange.getPrixEnVigueur(rngs[0].getIdcategorierange(), dateRef,
                 c);
-        double prixTotal     = prixProgramme + supplement;
-
+        double prixTotal = prixProgramme + supplement;
 
         // if (prog.getHeuredebut() != null) {
-        //     String[] p = prog.getHeuredebut().split(":");
-        //     if (p.length == 2) {
-        //         int heure = Integer.parseInt(p[0]);
-        //         if (heure >= 20 || heure == 0) {
-        //             prixTotal = prixTotal / 2;
-        //         }
-        //     }
+        // String[] p = prog.getHeuredebut().split(":");
+        // if (p.length == 2) {
+        // int heure = Integer.parseInt(p[0]);
+        // if (heure >= 20 || heure == 0) {
+        // prixTotal = prixTotal / 2;
+        // }
+        // }
         // }
 
         // Bonus : 19:30 compte-t-il comme "20h" ?
-        // Si tu veux que 19:30 soit aussi réduit (séance du soir), modifie la condition :
+        // Si tu veux que 19:30 soit aussi réduit (séance du soir), modifie la condition
+        // :
 
         // java
         // // Convertir l'heure en minutes depuis minuit
@@ -140,9 +140,28 @@ public class CinemaDetailReservation extends ClassFille {
 
         // // Si la séance commence à 19h30 ou plus tard
         // if (totalMinutes >= 19 * 60 + 30) { // 1170 minutes
-        //     prixTotal = prixTotal / 2;
+        // prixTotal = prixTotal / 2;
         // }
 
         return prixTotal;
+    }
+
+    /**
+     * Retourne l'idcategorierange d'une place.
+     */
+    public static String getCategorieDeLaPlace(String idplace, Connection c) throws Exception {
+        CinemaPlace pl = new CinemaPlace();
+        pl.setId(idplace);
+        CinemaPlace[] pls = (CinemaPlace[]) CGenUtil.rechercher(pl, null, null, c, "");
+        if (pls == null || pls.length == 0)
+            return null;
+
+        CinemaRange rng = new CinemaRange();
+        rng.setId(pls[0].getIdrange());
+        CinemaRange[] rngs = (CinemaRange[]) CGenUtil.rechercher(rng, null, null, c, "");
+        if (rngs == null || rngs.length == 0)
+            return null;
+
+        return rngs[0].getIdcategorierange();
     }
 }

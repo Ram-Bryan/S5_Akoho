@@ -29,6 +29,8 @@ DROP TABLE cinema_categorie_film       CASCADE CONSTRAINTS;
 DROP TABLE cinema_film                 CASCADE CONSTRAINTS;
 DROP TABLE cinema_categorie            CASCADE CONSTRAINTS;
 DROP TABLE cinema_classification       CASCADE CONSTRAINTS; 
+DROP TABLE cinema_remise               CASCADE CONSTRAINTS; 
+DROP TABLE cinema_paiement             CASCADE CONSTRAINTS;
 
 -- 3. Séquences
 DROP SEQUENCE SEQ_CINEMA_FACTURE_CLIENT;
@@ -49,7 +51,8 @@ DROP SEQUENCE SEQ_CINEMA_CATEGORIE_FILM;
 DROP SEQUENCE SEQ_CINEMA_FILM;
 DROP SEQUENCE SEQ_CINEMA_CATEGORIE;
 DROP SEQUENCE SEQ_CINEMA_CLASSIFICATION;
-
+DROP SEQUENCE SEQ_CINEMA_REMISE;
+DROP SEQUENCE SEQ_CINEMA_PAIEMENT;
 
 -- 4. Fonctions
 DROP FUNCTION getseq_cinema_facture_client;
@@ -70,5 +73,7 @@ DROP FUNCTION getseq_cinema_categorie_film;
 DROP FUNCTION getseq_cinema_film;
 DROP FUNCTION getseq_cinema_categorie;
 DROP FUNCTION getseq_cinema_classification;
+DROP FUNCTION getseq_cinema_remise;
+DROP FUNCTION getseq_cinema_paiement;
 
 COMMIT;

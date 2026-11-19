@@ -5,6 +5,9 @@ import mg.cnaps.compta.ComptaSousEcriture;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import bean.CGenUtil;
 
 import bean.CGenUtil;
@@ -135,6 +138,8 @@ public class CinemaReservation extends ClassMere {
             }
         }
 
+        this.calculerRemise(c);
+
         ClassMAPTable result = super.createObject(refUser, c);
 
         CinemaHistoriqueStatutReservation hist = new CinemaHistoriqueStatutReservation();
@@ -210,6 +215,105 @@ public class CinemaReservation extends ClassMere {
             throw new Exception("Film programmé obligatoire");
         if (this.getDatereservation() == null)
             throw new Exception("Date de réservation obligatoire");
+    }
+
+    /**
+     * Étape 1 : retourne toutes les règles applicables à cette réservation.
+     */
+    public CinemaRemise[] getRemises(Connection c) throws Exception {
+        Map<String, Integer> qteParCategorie = compterPlacesParCategorie(c);
+        return CinemaRemise.findApplicables(qteParCategorie, this.getDatereservation(), c);
+    }
+
+    /**
+     * Étape 2 : applique les remises aux places de la réservation.
+     * Cumul : plusieurs règles ciblant la même catégorie s'additionnent.
+     */
+    public void calculerRemise(Connection c) throws Exception {
+        CinemaRemise[] regles = this.getRemises(c);
+        if (regles == null || regles.length == 0)
+            return;
+
+        ClassFille[] filles = this.getFille();
+        if (filles == null)
+            return;
+
+
+        for (ClassFille f : filles) {
+            CinemaDetailReservation d = (CinemaDetailReservation) f;
+            if (d.getIdplace() == null)
+                continue;
+
+            String idCatPlace = CinemaDetailReservation.getCategorieDeLaPlace(
+                    d.getIdplace(), c);
+
+            if (idCatPlace == null)
+                continue;
+
+            // Une meilleure règle par catégorie source
+            int atteint = 0;
+
+            Map<String, CinemaRemise> meilleuresRegles = new HashMap<>();
+
+            for (CinemaRemise r : regles) {
+                if (!r.getIdcategorietarget().equals(idCatPlace)) {
+                    continue;
+                }
+
+                String idCatSource = r.getIdcategorie();
+
+                CinemaRemise ancienne = meilleuresRegles.get(idCatSource);
+
+
+                // On conserve le seuil le plus élevé
+                if (ancienne == null || r.getSeuilplace() > ancienne.getSeuilplace()) {
+                    meilleuresRegles.put(idCatSource, r);
+                }
+            }
+
+            // Cumul des meilleures règles provenant de catégories sources différentes
+            double cumulPct = 0;
+
+
+            for (CinemaRemise r : meilleuresRegles.values()) {
+                cumulPct += r.getPourcentage();
+            }
+
+
+            if (cumulPct > 0) {
+                cumulPct = Math.min(100, cumulPct);
+                double prixInitial = d.getPrixunitaire();
+
+                if ()
+
+                d.setPrixunitaire(
+                        prixInitial * (100 - cumulPct) / 100.0);
+            }
+
+            atteint++;
+        }
+    }
+
+    /**
+     * Helper : compte les places par catégorie de range.
+     */
+    private Map<String, Integer> compterPlacesParCategorie(Connection c) throws Exception {
+        Map<String, Integer> resultat = new HashMap<>();
+        ClassFille[] filles = this.getFille();
+        if (filles == null)
+            return resultat;
+
+        for (ClassFille f : filles) {
+            CinemaDetailReservation d = (CinemaDetailReservation) f;
+            if (d.getIdplace() == null)
+                continue;
+            String cat = CinemaDetailReservation.getCategorieDeLaPlace(d.getIdplace(), c);
+            if (cat == null)
+                continue;
+            Integer n = resultat.get(cat);
+            resultat.put(cat, n == null ? 1 : n + 1);
+        }
+        return resultat;
     }
 
     // ============================================================================

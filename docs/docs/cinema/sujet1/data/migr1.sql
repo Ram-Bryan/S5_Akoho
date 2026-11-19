@@ -63,7 +63,6 @@ CREATE TABLE cinema_paiement (
     CONSTRAINT CINEMA_PAIEMENT_FACTURE_FK FOREIGN KEY (idfacture) REFERENCES FACTURECLIENT(id)
 );
 
-
 -- ----------------------------------------------------------------------------
 -- 5. SÉQUENCE ET FONCTION POUR LE PAIEMENT
 -- ----------------------------------------------------------------------------
