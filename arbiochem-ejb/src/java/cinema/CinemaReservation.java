@@ -217,143 +217,68 @@ public class CinemaReservation extends ClassMere {
             throw new Exception("Date de réservation obligatoire");
     }
 
-    /**
-     * Étape 1 : retourne toutes les règles applicables à cette réservation.
-     */
-    public CinemaRemise[] getRemises(Connection c) throws Exception {
-        Map<String, Integer> qteParCategorie = compterPlacesParCategorie(c);
-        return CinemaRemise.findApplicables(qteParCategorie, this.getDatereservation(), c);
-    }
-
-    /**
-     * Étape 2 : applique les remises aux places de la réservation.
-     * Cumul : plusieurs règles ciblant la même catégorie s'additionnent.
+        /**
+     * Applique les remises sur le prix figé de chaque place.
+     * À appeler après que prixunitaire a été renseigné sur toutes les filles.
      */
     public void calculerRemise(Connection c) throws Exception {
-        CinemaRemise[] regles = this.getRemises(c);
-        if (regles == null || regles.length == 0)
-            return;
-
         ClassFille[] filles = this.getFille();
-        if (filles == null)
-            return;
+        if (filles == null || filles.length == 0) return;
 
+        // 1. Catégorie de chaque place, lue une seule fois
+        String[] cats = new String[filles.length];
+        for (int i = 0; i < filles.length; i++) {
+            String idPlace = ((CinemaDetailReservation) filles[i]).getIdplace();
+            cats[i] = (idPlace == null || idPlace.trim().isEmpty())
+                    ? null
+                    : CinemaDetailReservation.getCategorieDeLaPlace(idPlace, c);
+        }
 
-        for (ClassFille f : filles) {
-            CinemaDetailReservation d = (CinemaDetailReservation) f;
-            if (d.getIdplace() == null)
-                continue;
+        // 2. Règles déclenchées par cette réservation
+        CinemaRemise[] regles = CinemaRemise.findDeclenchees(cats, this.getDatereservation(), c);
+        if (regles.length == 0) return;
 
-            String idCatPlace = CinemaDetailReservation.getCategorieDeLaPlace(
-                    d.getIdplace(), c);
-
-            if (idCatPlace == null)
-                continue;
-
-            // Une meilleure règle par catégorie source
-            int atteint = 0;
-
-            Map<String, CinemaRemise> meilleuresRegles = new HashMap<>();
-
+        // 3. Cumul par place, selon sa catégorie
+        for (int i = 0; i < filles.length; i++) {
+            if (cats[i] == null) continue;
+            
+            double pct = 0;
             for (CinemaRemise r : regles) {
-                if (!r.getIdcategorietarget().equals(idCatPlace)) {
-                    continue;
-                }
-
-                String idCatSource = r.getIdcategorie();
-
-                CinemaRemise ancienne = meilleuresRegles.get(idCatSource);
-
-
-                // On conserve le seuil le plus élevé
-                if (ancienne == null || r.getSeuilplace() > ancienne.getSeuilplace()) {
-                    meilleuresRegles.put(idCatSource, r);
+                if (r.getIdcategorietarget().equals(cats[i])) {
+                    pct += r.getPourcentage();
                 }
             }
-
-            // Cumul des meilleures règles provenant de catégories sources différentes
-            double cumulPct = 0;
-
-
-            for (CinemaRemise r : meilleuresRegles.values()) {
-                cumulPct += r.getPourcentage();
+            
+            if (pct > 0) {
+                pct = Math.min(100, pct);
+                CinemaDetailReservation d = (CinemaDetailReservation) filles[i];
+                double prix = d.getPrixunitaire() * (100 - pct) / 100.0;
+                // Arrondi à 2 décimales pour correspondre à NUMBER(15,2) ou (30,2)
+                d.setPrixunitaire(Math.round(prix * 100) / 100.0); 
             }
-
-
-            if (cumulPct > 0) {
-                cumulPct = Math.min(100, cumulPct);
-                double prixInitial = d.getPrixunitaire();
-
-                if ()
-
-                d.setPrixunitaire(
-                        prixInitial * (100 - cumulPct) / 100.0);
-            }
-
-            atteint++;
         }
     }
 
     /**
-     * Helper : compte les places par catégorie de range.
+     * Montant total : on additionne simplement le prix figé en base.
+     * CORRECTION DU BUG : on ne recalcule surtout pas le prix de base.
      */
-    private Map<String, Integer> compterPlacesParCategorie(Connection c) throws Exception {
-        Map<String, Integer> resultat = new HashMap<>();
-        ClassFille[] filles = this.getFille();
-        if (filles == null)
-            return resultat;
-
-        for (ClassFille f : filles) {
-            CinemaDetailReservation d = (CinemaDetailReservation) f;
-            if (d.getIdplace() == null)
-                continue;
-            String cat = CinemaDetailReservation.getCategorieDeLaPlace(d.getIdplace(), c);
-            if (cat == null)
-                continue;
-            Integer n = resultat.get(cat);
-            resultat.put(cat, n == null ? 1 : n + 1);
-        }
-        return resultat;
-    }
-
-    // ============================================================================
-    // Montant total calculé dynamiquement
-    // - Si nouvelle réservation (id null) : depuis filles en mémoire
-    // - Si réservation existante : depuis filles en base
-    // Prix figé à la date de réservation (pas à aujourd'hui)
-    // ============================================================================
     public double getMontantTotal(Connection c) throws Exception {
-        if (this.getDatereservation() == null)
-            throw new Exception("Date de réservation requise pour calculer le montant");
-
         if (this.getId() == null) {
-            ClassFille[] filles = this.getFille();
-            if (filles == null || filles.length == 0)
-                return 0.0;
-            double total = 0;
-            for (ClassFille f : filles) {
-                CinemaDetailReservation d = (CinemaDetailReservation) f;
-                if (d.getIdplace() == null || d.getIdplace().trim().isEmpty())
-                    continue;
-                total += CinemaDetailReservation.getPrixUnitaire(
-                        this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
-            }
-            return total;
+            throw new Exception("Montant disponible seulement après création de la réservation");
         }
-
         CinemaDetailReservation crit = new CinemaDetailReservation();
         String where = " AND idreservation = '" + this.getId() + "' AND etat <> 0";
         CinemaDetailReservation[] details = (CinemaDetailReservation[]) CGenUtil.rechercher(crit, null, null, c, where);
-
-        if (details == null)
-            return 0.0;
         double total = 0;
-        for (CinemaDetailReservation d : details) {
-            total += CinemaDetailReservation.getPrixUnitaire(
-                    this.getIddetailprogramme(), d.getIdplace(), this.getDatereservation(), c);
+        if (details != null) {
+            for (CinemaDetailReservation d : details) {
+                total += d.getPrixunitaire();
+            }
         }
         return total;
     }
+
 
     // ============================================================================
     // changeState : gère l'action "payer" (valider le paiement)

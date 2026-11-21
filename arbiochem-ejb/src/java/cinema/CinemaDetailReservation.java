@@ -145,7 +145,6 @@ public class CinemaDetailReservation extends ClassFille {
 
         return prixTotal;
     }
-
     /**
      * Retourne l'idcategorierange d'une place.
      */
@@ -153,14 +152,12 @@ public class CinemaDetailReservation extends ClassFille {
         CinemaPlace pl = new CinemaPlace();
         pl.setId(idplace);
         CinemaPlace[] pls = (CinemaPlace[]) CGenUtil.rechercher(pl, null, null, c, "");
-        if (pls == null || pls.length == 0)
-            return null;
+        if (pls == null || pls.length == 0) return null;
 
         CinemaRange rng = new CinemaRange();
         rng.setId(pls[0].getIdrange());
         CinemaRange[] rngs = (CinemaRange[]) CGenUtil.rechercher(rng, null, null, c, "");
-        if (rngs == null || rngs.length == 0)
-            return null;
+        if (rngs == null || rngs.length == 0) return null;
 
         return rngs[0].getIdcategorierange();
     }

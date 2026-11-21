@@ -34,74 +34,24 @@ END;
 -- =========================================================
 -- GROUPE 1 : Plusieurs seuils pour une même cible
 -- =========================================================
+DELETE FROM cinema_remise;
 
--- Standard >= 2 : 20% sur Confort
-INSERT INTO cinema_remise
-VALUES ('CREM000001', 'CCRG000001', 2, 20, 'CCRG000002', TRUNC(SYSDATE)-30, NULL);
-
--- Standard >= 4 : 70% sur Confort
-INSERT INTO cinema_remise
-VALUES ('CREM000002', 'CCRG000001', 4, 70, 'CCRG000002', TRUNC(SYSDATE)-30, NULL);
-
--- Standard >= 5 : 10% sur Confort
--- Important : 10% est volontairement inférieur à 70%.
-INSERT INTO cinema_remise
-VALUES ('CREM000003', 'CCRG000001', 5, 10, 'CCRG000002', TRUNC(SYSDATE)-30, NULL);
-
--- =========================================================
--- GROUPE 2 : Même source, cibles différentes
--- =========================================================
-
--- Standard >= 2 : 20% sur VIP
-INSERT INTO cinema_remise
-VALUES ('CREM000004', 'CCRG000001', 2, 20, 'CCRG000003', TRUNC(SYSDATE)-30, NULL);
-
--- Standard >= 4 : 80% sur VIP
-INSERT INTO cinema_remise
-VALUES ('CREM000005', 'CCRG000001', 4, 80, 'CCRG000003', TRUNC(SYSDATE)-30, NULL);
-
--- =========================================================
--- GROUPE 3 : Plusieurs catégories sources vers une cible
--- =========================================================
-
--- VIP >= 2 : 50% sur Confort
-INSERT INTO cinema_remise
-VALUES ('CREM000006', 'CCRG000003', 2, 50, 'CCRG000002', TRUNC(SYSDATE)-30, NULL);
-
--- Confort >= 3 : 30% sur VIP
-INSERT INTO cinema_remise
-VALUES ('CREM000007', 'CCRG000002', 3, 30, 'CCRG000003', TRUNC(SYSDATE)-30, NULL);
-
--- VIP >= 5 : 40% sur Confort
--- Une deuxième règle provenant de VIP vers Confort.
-INSERT INTO cinema_remise
-VALUES ('CREM000008', 'CCRG000003', 5, 40, 'CCRG000002', TRUNC(SYSDATE)-30, NULL);
-
--- =========================================================
--- GROUPE 4 : Plusieurs sources vers Standard
--- =========================================================
-
--- VIP >= 5 : 60% sur Standard
-INSERT INTO cinema_remise
-VALUES ('CREM000009', 'CCRG000003', 5, 60, 'CCRG000001', TRUNC(SYSDATE)-30, NULL);
-
--- Confort >= 3 : 50% sur Standard
-INSERT INTO cinema_remise
-VALUES ('CREM000010', 'CCRG000002', 3, 50, 'CCRG000001', TRUNC(SYSDATE)-30, NULL);
-
--- =========================================================
--- GROUPE 5 : Règles temporelles
--- =========================================================
-
--- Règle expirée : ne doit pas être appliquée
-INSERT INTO cinema_remise
-VALUES ('CREM000011', 'CCRG000003', 1, 100, 'CCRG000002',
-        TRUNC(SYSDATE)-30, NULL);
-
--- Règle future : ne doit pas être appliquée aujourd'hui
-INSERT INTO cinema_remise
-VALUES ('CREM000012', 'CCRG000003', 1, 100, 'CCRG000002',
-        TRUNC(SYSDATE)-30, NULL);
+-- Standard (S) >= 2 : 20 % sur Confort
+INSERT INTO cinema_remise VALUES ('CREM000001','CCRG000001',2,20,'CCRG000002',TRUNC(SYSDATE)-90,NULL);
+-- Standard >= 4 : 70 % sur Confort (domine R1)
+INSERT INTO cinema_remise VALUES ('CREM000002','CCRG000001',4,70,'CCRG000002',TRUNC(SYSDATE)-90,NULL);
+-- Standard >= 3 : 10 % sur VIP
+INSERT INTO cinema_remise VALUES ('CREM000003','CCRG000001',3,10,'CCRG000003',TRUNC(SYSDATE)-90,NULL);
+-- Confort (C) >= 2 : 25 % sur VIP
+INSERT INTO cinema_remise VALUES ('CREM000004','CCRG000002',2,25,'CCRG000003',TRUNC(SYSDATE)-90,NULL);
+-- VIP (V) >= 1 : 5 % sur Standard
+INSERT INTO cinema_remise VALUES ('CREM000005','CCRG000003',1,5,'CCRG000001',TRUNC(SYSDATE)-90,NULL);
+-- Confort >= 3 : 15 % sur Standard
+INSERT INTO cinema_remise VALUES ('CREM000006','CCRG000002',3,15,'CCRG000001',TRUNC(SYSDATE)-90,NULL);
+-- Standard >= 6 : 80 % sur VIP (domine R3)
+INSERT INTO cinema_remise VALUES ('CREM000007','CCRG000001',6,80,'CCRG000003',TRUNC(SYSDATE)-90,NULL);
+-- VIP >= 2 : 33,33 % sur Confort (décimal)
+INSERT INTO cinema_remise VALUES ('CREM000008','CCRG000003',2,33.33,'CCRG000002',TRUNC(SYSDATE)-90,NULL);
 
 
 COMMIT;

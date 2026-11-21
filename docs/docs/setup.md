@@ -104,6 +104,8 @@ Mot de passe: test
 
 Entrer dans un user oracle:
 docker exec -it <container_name> bash
+docker exec -it oracle bash
+
 su - oracle
 sqlplus akoho/Akoho123
 

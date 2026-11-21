@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CinemaRemise extends ClassMAPTable {
     private String id;
@@ -41,35 +40,71 @@ public class CinemaRemise extends ClassMAPTable {
     }
 
     /**
-     * Retourne toutes les règles applicables à une date donnée pour les quantités achetées.
-     * Ne fusionne PAS : chaque règle déclenchée est retournée séparément.
+     * Règles valides à la date (filtre de dates uniquement).
      */
-    public static CinemaRemise[] findApplicables(
-            Map<String, Integer> qteParCategorie,
-            Date dateRef,
-            Connection c) throws Exception {
-
-        if (qteParCategorie == null || qteParCategorie.isEmpty()) {
-            return new CinemaRemise[0];
-        }
-
+    public static CinemaRemise[] findActives(Date dateRef, Connection c) throws Exception {
         CinemaRemise crit = new CinemaRemise();
-        String dateStr = dateRef.toString();
-        String where = " AND TRUNC(datydebut) <= TO_DATE('" + dateStr + "', 'YYYY-MM-DD') "
-                     + " AND (datyfin IS NULL OR TRUNC(datyfin) >= TO_DATE('" + dateStr + "', 'YYYY-MM-DD')) ";
-        CinemaRemise[] toutes = (CinemaRemise[]) CGenUtil.rechercher(crit, null, null, c, where);
+        String d = dateRef.toString();
+        String where = " AND TRUNC(datydebut) <= TO_DATE('" + d + "', 'YYYY-MM-DD') "
+                     + " AND (datyfin IS NULL OR TRUNC(datyfin) >= TO_DATE('" + d + "', 'YYYY-MM-DD')) ";
+        CinemaRemise[] r = (CinemaRemise[]) CGenUtil.rechercher(crit, null, null, c, where);
+        return r == null ? new CinemaRemise[0] : r;
+    }
 
-        if (toutes == null || toutes.length == 0) return new CinemaRemise[0];
-
-        List<CinemaRemise> retenues = new ArrayList<>();
-        for (CinemaRemise r : toutes) {
-            Integer qte = qteParCategorie.get(r.getIdcategorie());
-            if (qte != null && qte >= r.getSeuilplace()) {
-                
-                retenues.add(r);
+    /**
+     * Règles réellement appliquées pour une réservation.
+     * cats = catégorie de chaque place achetée (une entrée par place).
+     */
+    public static CinemaRemise[] findDeclenchees(String[] cats, Date dateRef, Connection c) throws Exception {
+        // 1. Filtrer les règles dont le seuil est atteint
+        List<CinemaRemise> declenchees = new ArrayList<>();
+        for (CinemaRemise r : findActives(dateRef, c)) {
+            if (compter(cats, r.getIdcategorie()) >= r.getSeuilplace()) {
+                declenchees.add(r);
             }
         }
+        
+        // 2. Appliquer la règle de dominance (même source + même cible = garder le seuil max)
+        List<CinemaRemise> retenues = new ArrayList<>();
+        for (CinemaRemise r : declenchees) {
+            boolean dominee = false;
+            for (CinemaRemise autre : declenchees) {
+                if (autre.getIdcategorie().equals(r.getIdcategorie())
+                        && autre.getIdcategorietarget().equals(r.getIdcategorietarget())
+                        && autre.getSeuilplace() > r.getSeuilplace()) {
+                    dominee = true;
+                    break;
+                }
+            }
+            if (!dominee) retenues.add(r);
+        }
         return retenues.toArray(new CinemaRemise[0]);
+    }
+
+    private static int compter(String[] cats, String idCat) {
+        int n = 0;
+        for (String cat : cats) {
+            if (idCat.equals(cat)) n++;
+        }
+        return n;
+    }
+
+    @Override
+    public void controler(Connection c) throws Exception {
+        // Empêche les doublons exacts (même source, même cible, même seuil, même date de début)
+        CinemaRemise crit = new CinemaRemise();
+        String where = " AND idcategorie = '" + this.getIdcategorie() + "' "
+                     + " AND idcategorietarget = '" + this.getIdcategorietarget() + "' "
+                     + " AND seuilplace = " + this.getSeuilplace() + " "
+                     + " AND TRUNC(datydebut) = TO_DATE('" + this.getDatydebut() + "', 'YYYY-MM-DD') ";
+        if (this.getId() != null && !this.getId().isEmpty()) {
+            where += " AND id <> '" + this.getId() + "' ";
+        }
+        
+        CinemaRemise[] existantes = (CinemaRemise[]) CGenUtil.rechercher(crit, null, null, c, where);
+        if (existantes != null && existantes.length > 0) {
+            throw new Exception("Une règle identique existe déjà pour cette catégorie, cette cible et ce seuil à cette date.");
+        }
     }
 
     // Getters / setters
