@@ -217,15 +217,15 @@ public class CinemaReservation extends ClassMere {
             throw new Exception("Date de réservation obligatoire");
     }
 
-        /**
+    /**
      * Applique les remises sur le prix figé de chaque place.
      * À appeler après que prixunitaire a été renseigné sur toutes les filles.
      */
     public void calculerRemise(Connection c) throws Exception {
         ClassFille[] filles = this.getFille();
-        if (filles == null || filles.length == 0) return;
+        if (filles == null || filles.length == 0)
+            return;
 
-        // 1. Catégorie de chaque place, lue une seule fois
         String[] cats = new String[filles.length];
         for (int i = 0; i < filles.length; i++) {
             String idPlace = ((CinemaDetailReservation) filles[i]).getIdplace();
@@ -234,28 +234,28 @@ public class CinemaReservation extends ClassMere {
                     : CinemaDetailReservation.getCategorieDeLaPlace(idPlace, c);
         }
 
-        // 2. Règles déclenchées par cette réservation
         CinemaRemise[] regles = CinemaRemise.findDeclenchees(cats, this.getDatereservation(), c);
-        if (regles.length == 0) return;
 
-        // 3. Cumul par place, selon sa catégorie
+        double[] pct = new double[filles.length]; // cumul de % par place
+
+        for (CinemaRemise r : regles) {
+            int count = 0; // un compteur par règle
+            for (int i = 0; i < filles.length; i++) {
+                if (!r.getIdcategorietarget().equals(cats[i]))
+                    continue;
+                if (count >= 1)
+                    break; // 1 seule place par règle
+                pct[i] += r.getPourcentage();
+                count++;
+            }
+        }
+
         for (int i = 0; i < filles.length; i++) {
-            if (cats[i] == null) continue;
-            
-            double pct = 0;
-            for (CinemaRemise r : regles) {
-                if (r.getIdcategorietarget().equals(cats[i])) {
-                    pct += r.getPourcentage();
-                }
-            }
-            
-            if (pct > 0) {
-                pct = Math.min(100, pct);
-                CinemaDetailReservation d = (CinemaDetailReservation) filles[i];
-                double prix = d.getPrixunitaire() * (100 - pct) / 100.0;
-                // Arrondi à 2 décimales pour correspondre à NUMBER(15,2) ou (30,2)
-                d.setPrixunitaire(Math.round(prix * 100) / 100.0); 
-            }
+            if (pct[i] <= 0)
+                continue;
+            CinemaDetailReservation d = (CinemaDetailReservation) filles[i];
+            double p = Math.min(100, pct[i]);
+            d.setPrixunitaire(Math.round(d.getPrixunitaire() * (100 - p) / 100.0 * 100) / 100.0);
         }
     }
 
@@ -278,7 +278,6 @@ public class CinemaReservation extends ClassMere {
         }
         return total;
     }
-
 
     // ============================================================================
     // changeState : gère l'action "payer" (valider le paiement)
