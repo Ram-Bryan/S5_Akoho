@@ -243,8 +243,10 @@ public class CinemaReservation extends ClassMere {
             for (int i = 0; i < filles.length; i++) {
                 if (!r.getIdcategorietarget().equals(cats[i]))
                     continue;
-                if (count >= 1)
-                    break; // 1 seule place par règle
+
+                // alea 1 seule est prise
+                // if (count >= 1)
+                //     break; // 1 seule place par règle
                 pct[i] += r.getPourcentage();
                 count++;
             }
