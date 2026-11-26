@@ -4,6 +4,10 @@
 -- Ne touche PAS aux tables du framework (MENUDYNAMIQUE, USERMENU, etc.)
 -- ============================================================================
 
+DELETE FROM FACTURECLIENTDETAILS;
+DELETE FROM FACTURECLIENT;
+
+
 -- 1. Vues (d'abord, pour éviter les invalidations)
 DROP VIEW cinema_programme_lib;
 DROP VIEW cinema_detail_programme_lib;
